@@ -1,7 +1,7 @@
 #ifndef RM_SPEC_C
 #define RM_SPEC_C
 
-#include "../util/rm_util.h"
+#include "../utils/rm_utils.h"
 
 static inline int _numeric(lexer * lex);
 static inline int _literal(lexer * lex);

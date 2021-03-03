@@ -12,10 +12,11 @@ static inline int scan_token(lexer *lex, struct language *lang, char **tokens)
     {
         int start = lex->current;
 
-        lang->rules.scan_identifier(lex);
-        lang->rules.scan_literal(lex);
-        lang->rules.scan_numeric(lex);
-        lang->rules.scan_punctuation(lex);
+        lang->rules.scan_numeric(lex, tokens);
+        lang->rules.scan_identifier(lex, tokens);
+        lang->rules.skip_comment(lex, tokens);
+        lang->rules.scan_punctuation(lex, tokens);
+        lang->rules.scan_literal(lex, tokens);
 
         _next_char(lex, 0);
     }
