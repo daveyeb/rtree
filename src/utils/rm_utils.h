@@ -7,14 +7,14 @@
 #include <stdio.h>
 #include <ctype.h>
 
-enum token_t
+typedef enum token_t
 {
     RC_INDENTIFIER,
     RC_LITERAL,
     RC_KEYWORD,
     RC_PUNCTUATION,
     RC_ENDOFFILE
-};
+} token_t;
 
 typedef struct token
 {
@@ -29,7 +29,7 @@ typedef struct lexer
     unsigned int current;
     unsigned int length;
     char *buf;
-};
+} lexer;
 
 struct rules_vtable
 {
