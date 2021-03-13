@@ -25,7 +25,6 @@ int rm_array_delete(rm_array *a, const size_t index);
 // int rm_array_resize(rm_array *a, const size_t size, const void *value);
 int rm_array_get(rm_array *a, const size_t index, void *value); // get value
 int rm_array_clear(rm_array *a);
-int rm_array_fill_zero(rm_array *a);
 int rm_array_concat(rm_array *a, rm_array *b, rm_array *result);
 int rm_array_destroy(rm_array *a);
 
@@ -168,14 +167,14 @@ int rm_array_delete(rm_array *a, const size_t index)
     int rm_cnt[2] = {0};
     void *tmp_data_cpy;
 
-    tmp_data_cpy = (void *)malloc(sizeof(void *));
-    memcpy(tmp_data_cpy, a->data, sizeof(void *));
-
     if (a == NULL)
         return 1;
 
-    if (index >= a->capacity)
+    if (index < 0 || index >= a->capacity)
         return 1;
+
+    tmp_data_cpy = (void *)malloc(sizeof(void *));
+    memcpy(tmp_data_cpy, a->data, sizeof(void *));
 
     while (rm_cnt[0] <= a->size)
     {
@@ -188,17 +187,17 @@ int rm_array_delete(rm_array *a, const size_t index)
         switch (a->data_size)
         {
         case RM_STRING_SIZE_CAP:
-            
+
             memcpy(((char *)tmp_data_cpy) + rm_cnt[1], ((char *)a->data) + rm_cnt[0], (rm_cnt[0] + 1) * a->data_size);
-            
+
             break;
 
         case RM_INT_SIZE_CAP:
-            
+
             memcpy(((int *)tmp_data_cpy) + rm_cnt[1], ((int *)a->data) + rm_cnt[0], (rm_cnt[0] + 1) * a->data_size);
 
             break;
-        
+
         default:
             break;
         }
@@ -212,6 +211,65 @@ int rm_array_delete(rm_array *a, const size_t index)
 
     memcpy(a->data, tmp_data_cpy, sizeof(void *));
     free(tmp_data_cpy);
+
+    return 0;
+}
+
+int rm_array_get(rm_array *a, const size_t index, void *value)
+{
+
+    if (a == NULL)
+        return 1;
+
+    if (index < 0 || index >= a->capacity)
+        return 1;
+
+    switch (a->data_size)
+    {
+    case RM_INT_SIZE_CAP:
+        memcpy(value, &((int *)a->data)[index], sizeof(void *));
+
+        break;
+    case RM_STRING_SIZE_CAP:
+
+        memcpy(value, &((char *)a->data)[index * a->data_size], sizeof(void *));
+
+        break;
+
+    default:
+        break;
+    }
+
+    return 0;
+}
+
+int rm_array_clear(rm_array *a)
+{
+    int index;
+
+    if (a == NULL)
+        return 1;
+
+    switch (a->data_size)
+    {
+    case RM_STRING_SIZE_CAP:
+
+        index = 0;
+        while (index < a->capacity)
+            memset(&((char *)a->data)[index++ * a->data_size], 0, a->capacity - 1);
+
+        break;
+    case RM_INT_SIZE_CAP:
+
+        index = 0;
+        while (index < a->capacity)
+            memset(&((int *)a->data)[index++], 0, a->capacity);
+
+        break;
+
+    default:
+        break;
+    }
 
     return 0;
 }

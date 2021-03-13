@@ -22,17 +22,20 @@ int main()
     // status = rm_array_push_back(david, &status);
     // status = rm_array_push_back(david, &index);
     status = rm_array_insert(david, 1, a);
-    status = rm_array_delete(david, 1);
+    status = rm_array_delete(david, 3);
+    status = rm_array_get(david, 0, a);
+
+    status = rm_array_clear(david);
     
-    // printf("status = %d \n", status);
+    printf("status = %d \n", *a);
 
     // printf("---------\n");
-    // for(index = 0; index < david->capacity; index++)
-    // {
+    for(index = 0; index < david->capacity; index++)
+    {
 
-    //     printf("%d ", index );
-    //     printf("%d \n", ((int *)david->data)[index]);
-    // }
+        printf("%d ", index );
+        printf("%d \n", ((int *)david->data)[index]);
+    }
 
 
     // printf("\n\n size %lu\n", david->size);
