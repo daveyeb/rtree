@@ -1,22 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../../src/ds/rm_array.h"
 
-int main(){
-    int a;
-    rm_array * f = malloc(sizeof(rm_array));
+int main()
+{
 
-    // rm_array_init(f, 6);
+    int status = -1;
+    int index = -1;
 
-    // printf("size is %d \n", f->capacity);
-    rm_array_init_fill(f, 6, 99);
+    int b = 5;  // TODO: i dont like this, passing an integer by reference
+    int * a = &b;
 
-    // for(a = 0; a < 7; a++){
-    //     printf("%d ",(int) f->data[a]);
+    rm_array * david;
+    david = malloc(sizeof(rm_array));
+
+    status = rm_array_init(david, RM_INT_SIZE_CAP, 3);
+    status = rm_array_push_back(david, &index);
+    status = rm_array_push_back(david, &status);
+    // status = rm_array_push_back(david, &status);
+    // status = rm_array_push_back(david, &index);
+    status = rm_array_insert(david, 1, a);
+    status = rm_array_delete(david, 1);
+    
+    // printf("status = %d \n", status);
+
+    // printf("---------\n");
+    // for(index = 0; index < david->capacity; index++)
+    // {
+
+    //     printf("%d ", index );
+    //     printf("%d \n", ((int *)david->data)[index]);
     // }
 
-    rm_array_destroy(f);
+
+    // printf("\n\n size %lu\n", david->size);
+    
+
+    status = rm_array_destroy(david);
+
+
+    // TODO: research can pointers overflow 
+    
 
     return 0;
 }
