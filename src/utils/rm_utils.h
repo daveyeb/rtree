@@ -72,7 +72,7 @@ static inline int _peek(lexer *lex, char *result, int n_pos)
     if ((n_pos + temp_curr) >= buf_len) // end of line reached;
         return 1;
 
-    strncpy(result, lex->buf + (n_pos + temp_curr), n_pos);
+    strncpy(result, lex->buf + (++temp_curr), n_pos);
     // printf("peek result %s", result);
 
     return 0;
@@ -94,7 +94,11 @@ static inline int _next_char(lexer *lex, int *c)
 {
     int buf_len;
 
+    if (lex == NULL)
+        return 1;
+
     buf_len = strlen(lex->buf);
+
 
     if (lex->current < buf_len)
         *c = lex->buf[++lex->current];
@@ -111,10 +115,16 @@ static inline int _match(lexer *lex, char expected, int *found)
     *found = 0;
     curr = lex->current;
 
+
     if ((curr >= buf_len) || (lex->buf[curr] != expected))
         return 1;
-    else
+    else{
         *found = 1;
+        ++lex->current;
+    }
+        
+
+    
 
     return 0;
 }
