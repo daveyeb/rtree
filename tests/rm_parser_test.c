@@ -10,7 +10,7 @@ int main()
 
     int src_cnt;
     char **tokens;
-    char *src = "int var  = 4; int fish = 55;";
+    char *src = "int var  >>>= 0l    0777L    0x100000000L    2_147_483_648L    0xC0B0L ; int fish | 55;";
 
     src_cnt = strlen(src);
 
