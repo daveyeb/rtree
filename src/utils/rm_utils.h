@@ -33,32 +33,33 @@ typedef struct lexer
 
 struct rules_vtable
 {
-    int (*scan_numeric)(lexer *p, char ** tokens);
-    int (*scan_literal)(lexer *p, char ** tokens);
-    int (*scan_punctuation)(lexer *p, char ** tokens);
-    int (*scan_identifier)(lexer *p, char ** tokens);
-    int (*skip_comment)(lexer *p, char ** tokens);
+    int (*scan_numeric)(lexer *p, char **tokens);
+    int (*scan_literal)(lexer *p, char **tokens);
+    int (*scan_punctuation)(lexer *p, char **tokens);
+    int (*scan_identifier)(lexer *p, char **tokens);
+    int (*skip_comment)(lexer *p, char **tokens);
 };
 
-struct language
+typedef struct language
 {
     struct rules_vtable rules;
     const char *name;
-};
+} language;
 
-
-int isbinary(char c){
+int isbinary(char c)
+{
     return (c == 48 || c == 49);
 }
 
-int isalnumundol(char c){
+int isalnumundol(char c)
+{
     return isalnum(c) || c == 95 || c == 36;
 }
 
 static inline int _peek(lexer *lex, char *result, int n_pos);
-static inline int _curr_char(lexer *lex, int c);
-static inline int _next_char(lexer *lex, int c);
-static inline int _match(lexer *lex, char expected, int found);
+static inline int _curr_char(lexer *lex, int *c);
+static inline int _next_char(lexer *lex, int *c);
+static inline int _match(lexer *lex, char expected, int *found);
 
 static inline int _peek(lexer *lex, char *result, int n_pos)
 {
@@ -71,51 +72,51 @@ static inline int _peek(lexer *lex, char *result, int n_pos)
     if ((n_pos + temp_curr) >= buf_len) // end of line reached;
         return 1;
 
-    strncpy(result, lex->buf + temp_curr, n_pos);
+    strncpy(result, lex->buf + (n_pos + temp_curr), n_pos);
+    // printf("peek result %s", result);
 
     return 0;
 }
 
-static inline int _curr_char(lexer *lex, int c)
+static inline int _curr_char(lexer *lex, int *c)
 {
     int buf_len;
 
     buf_len = strlen(lex->buf);
 
     if (lex->current < buf_len)
-        c = lex->buf[lex->current];
+        *c = lex->buf[lex->current];
 
     return 0;
 }
 
-static inline int _next_char(lexer *lex, int c)
+static inline int _next_char(lexer *lex, int *c)
 {
     int buf_len;
 
     buf_len = strlen(lex->buf);
 
     if (lex->current < buf_len)
-        c = lex->buf[lex->current++];
+        *c = lex->buf[++lex->current];
 
     return 0;
 }
 
-static inline int _match(lexer *lex, char expected, int found)
+static inline int _match(lexer *lex, char expected, int *found)
 { // idgt
     int buf_len;
     int curr;
 
     buf_len = strlen(lex->buf);
-    found = 0;
+    *found = 0;
     curr = lex->current;
 
     if ((curr >= buf_len) || (lex->buf[curr] != expected))
         return 1;
     else
-        found = 1;
+        *found = 1;
 
     return 0;
 }
-
 
 #endif // RM_UTIL

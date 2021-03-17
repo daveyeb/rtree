@@ -7,6 +7,7 @@ static inline int scan_token(lexer *lex, struct language *lang, char **tokens);
 
 static inline int scan_token(lexer *lex, struct language *lang, char **tokens)
 {
+    int tmp_char; // needed to skip whitespaces and illegal chars
 
     while (lex->current < lex->length)
     {
@@ -18,7 +19,8 @@ static inline int scan_token(lexer *lex, struct language *lang, char **tokens)
         lang->rules.scan_punctuation(lex, tokens);
         lang->rules.scan_literal(lex, tokens);
 
-        _next_char(lex, 0);
+        _next_char(lex, &tmp_char);
+        // printf("tmp char %c <--\n", tmp_char);
     }
 
     return 0;
