@@ -3,22 +3,21 @@
 #include <string.h>
 
 #include "../src/parser/rm_parser.h"
-#include "../src/rules/rm_spec_java.h"
 
 int main()
 {
 
     int src_cnt;
-    char **tokens;
-    char *src = "int var  >>>= 0l    0777L    0x100000000L    2_147_483_648L    0xC0B0L ; int fish | 55;";
+    rm_array *a;
+    char *src = "1e1    2.    .3    0.0    3.14    1e-9d    1e137";
 
     src_cnt = strlen(src);
 
     lexer t = {0, 0, src_cnt, src};
 
-    language b = {{&_numeric, &_literal, &_punctuation, &_identifier, &_comment}, "Java"};
+    language b = {{&_numeric}, "Java"};
 
-    scan_token(&t, &b, tokens);
+    scan_token(&t, &b, a);
 
     return 0;
 }
