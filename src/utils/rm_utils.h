@@ -45,7 +45,7 @@ typedef struct lexer
 
 struct rules_vtable
 {
-    int (*scan_numeric)(lexer *p, rm_array * a);
+    const int (*scan_numeric)(lexer *p, rm_array * a);
 
     // int (*scan_literal)(lexer *p, char **tokens);
     // int (*scan_punctuation)(lexer *p, char **tokens);

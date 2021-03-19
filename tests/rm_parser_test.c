@@ -8,8 +8,8 @@ int main()
 {
 
     int src_cnt;
-    rm_array *a;
-    char *src = "1e1    2.    .3    0.0    3.14    1e-9d    1e137";
+    rm_array a;
+    char *src = "1e1f    2.f    .3f    0f    3.14f    6.022137e+23f";
 
     src_cnt = strlen(src);
 
@@ -17,7 +17,9 @@ int main()
 
     language b = {{&_numeric}, "Java"};
 
-    scan_token(&t, &b, a);
+    printf("die4guy\n");
+
+    scan_token(&t, &b, &a);
 
     return 0;
 }

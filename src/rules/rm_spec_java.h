@@ -2,356 +2,336 @@
 #define RM_SPEC_JAVA
 
 #include "../utils/rm_utils.h"
+#include "../ds/rm_array.h"
 
-#define BUF_SIZE 4906
+const int _numeric(lexer *lexer, rm_array *tokens);
+const int _literal(lexer *lexer, rm_array *tokens);
+const int _punctuation(lexer *lexer, rm_array *tokens);
+const int _identifier(lexer *lexer, rm_array *tokens);
+const int _comment(lexer *lexer, rm_array *tokens);
 
-static inline int _numeric(lexer *lex, char **tokens);
-static inline int _literal(lexer *lex, char **tokens);
-static inline int _punctuation(lexer *lex, char **tokens);
-static inline int _identifier(lexer *lex, char **tokens);
-static inline int _comment(lexer *lex, char **tokens);
-
-static inline int _numeric(lexer *lex, char **tokens)
+const int _numeric(lexer *lexer, rm_array *tokens)
 {
-    int cc; // current char
-    int buf_count;
-    char buf[BUF_SIZE];
-    char *peek_buf;
-    int period_cnt;
 
-    period_cnt = 0;
-    buf_count = 0;
-    memset(&buf, 0, BUF_SIZE);
+    int curr;                     // current char
+    int t_cnt;                    // token char count
+    int p_cnt;                    // period count -- for decimal numerals
+    int status;                   // function status
+    int (*ctype_func_ptr)(int c); // function pointer
 
-    _curr_char(lex, &cc);
+    char token[TOK_SIZE]; // token buffer
+    char peek[PEK_SIZE];  // peek buffer
 
-    switch (isdigit(cc))
+    if (lexer == NULL || tokens == NULL)
+        return RM_FAIL;
+
+    curr = 0;
+    p_cnt = 0;
+    t_cnt = 0;
+
+    memset(token, 0, TOK_SIZE);
+    memset(peek, 0, PEK_SIZE);
+
+    _curr_char(lexer, &curr);
+
+    status = isdigit(curr);
+
+    if (status)
     {
-    case 1:
-        while (isdigit(cc) || cc == '.')
+        while (isdigit(curr) || curr == '.' || curr == 'e' || curr == '-' || curr == '+')
         {
-            if (cc == '.')
-                period_cnt++;
-            if (period_cnt > 1)
+            if (p_cnt > 1)
                 break;
+            if (curr == '.')
+                ++p_cnt;
 
-            buf[buf_count++] = cc;
-            _next_char(lex, &cc);
+            token[t_cnt++] = curr;
+            _next_char(lexer, &curr);
 
-            if (cc == '_')
-                while (!_match(lex, '_', (int *)&peek_buf[0]))
+            if (curr == '_') // skip underscores
+                while (!_match(lexer, &status, '_', 0))
                     ;
 
-            _curr_char(lex, &cc);
+            _curr_char(lexer, &curr);
         }
 
-        _curr_char(lex, &cc);
+        if (curr == ' ')
+            goto t_postfix;
 
-        if (cc != ' ' && period_cnt >= 1)
+        if (t_cnt != 1 && token[0] != '0')
+            goto t_postfix;
+
+        if (curr != 'x' && curr != 'b')
+            goto t_postfix;
+
+        if (p_cnt >= 1)
+            goto t_postfix;
+
+        ctype_func_ptr = (curr == 'x') ? &isxdigit : &isbinary;
+
+        token[t_cnt++] = curr;    // add to token buffer
+        _next_char(lexer, &curr); // consume x or b
+
+        while (ctype_func_ptr(curr))
         {
-            // printf("here %s\n", buf);
+            token[t_cnt++] = curr;
+            _next_char(lexer, &curr);
 
-            int found;
-            _match(lex, 'f', &found);
-
-            _curr_char(lex, &cc);
-
-            if (found)
-            {
-                buf[buf_count++] = 'f';
-            }
+            if (curr == '_') // skip underscores
+                while (!_match(lexer, &status, '_', 0))
+                    ;
+            _curr_char(lexer, &curr);
         }
+    }
+    else
+    {
 
-        if (buf_count == 1 && buf[0] == '0')
+        _peek(lexer, &peek[0], 1);
+
+        if (curr != '.')
+            goto t_exit;
+
+        if (isdigit(peek[0]) == 0)
+            goto t_exit;
+
+        token[t_cnt++] = curr;
+        _next_char(lexer, &curr);
+
+        while (isdigit(curr))
         {
-            _curr_char(lex, &cc);
-
-            if (cc == 'x')
-            {
-
-                // sume x or b
-                buf[buf_count++] = cc;
-                _next_char(lex, &cc);
-
-                while (isxdigit(cc))
-                {
-                    buf[buf_count++] = cc;
-                    _next_char(lex, &cc);
-                    if (cc == '_')
-                        while (!_match(lex, '_', (int *)&peek_buf[0]))
-                            ;
-                    _curr_char(lex, &cc);
-                }
-            }
-            else if (cc == 'b')
-            {
-
-                // sume x or b
-                buf[buf_count++] = cc;
-                _next_char(lex, &cc);
-
-                while (isbinary(cc))
-                {
-                    buf[buf_count++] = cc;
-                    _next_char(lex, &cc);
-                    if (cc == '_')
-                        while (!_match(lex, '_', (int *)&peek_buf[0]))
-                            ;
-                    _curr_char(lex, &cc);
-                }
-            }
-
-            int found;
-
-            _match(lex, 'L', &found);
-
-            if (found || (buf_count > 1 && cc == 'L'))
-            {
-                buf[buf_count++] = 'L';
-            }
-
-            return 0;
+            token[t_cnt++] = curr;
+            _next_char(lexer, &curr);
         }
-
-        int found;
-
-        _match(lex, 'L', &found);
-
-
-        if (found || (buf_count > 1 && cc == 'L'))
-        {
-            buf[buf_count++] = 'L';
-        }
-
-        printf("number --> %s \n", buf);
-
-    case 0:
-        memset(peek_buf, 0, 3);
-        _peek(lex, peek_buf, 1);
-
-        if (cc == '.' && isdigit(peek_buf[0]))
-        {
-
-            buf[buf_count++] = cc;
-            _next_char(lex, &cc); // consume
-            cc = peek_buf[0];
-            while (isdigit(cc))
-            {
-                buf[buf_count++] = cc;
-                _next_char(lex, &cc);
-            }
-
-            printf("number --> %s \n", buf);
-        }
-
-        break;
-
-    default:
-        break;
     }
 
-    return 0;
+t_postfix:
+
+    _match(lexer, &status, 'f', 0);
+
+    if (!status)
+        _match(lexer, &status, 'L', 1);
+
+    if (!status)
+        goto t_persist;
+
+    token[t_cnt++] = curr;
+
+t_persist:
+    // add to array
+    printf("number --> %s\n", token);
+
+t_exit:
+
+    return RM_SUCCESS;
 }
 
-static inline int _literal(lexer *lex, char **tokens)
+const int _literal(lexer *lexer, rm_array *tokens)
 {
-    int quotation_mark;
-    int cc;
-    int found;
-    int buf_count;
-    char buf[BUF_SIZE];
+    int curr;   // current char
+    int t_cnt;  // token char count
+    int qt;     // quotation mark char
+    int status; // func. status
 
-    buf_count = 0;
-    _curr_char(lex, &quotation_mark);
+    char token[TOK_SIZE];
 
-    if (quotation_mark != 34 && quotation_mark != 39)
-        return 1;
+    if (lexer == NULL || tokens == NULL)
+        return RM_FAIL;
 
-    _match(lex, quotation_mark, 0); // consume " or '
+    curr = 0;
+    t_cnt = 0;
 
-    _curr_char(lex, &cc);
+    memset(token, 0, TOK_SIZE);
 
-    while (cc != quotation_mark)
+    _curr_char(lexer, &curr);
+
+    if (curr != 34 && curr != 39)
+        return RM_FAIL;
+
+    qt = curr;
+    _next_char(lexer, &curr);
+
+    while (curr != qt)
     {
-        _next_char(lex, &cc);
+        _next_char(lexer, &curr);
 
-        if (cc == 92)
-        { // Consuming escape characters
-            buf[buf_count++] = cc;
-
-            _next_char(lex, &cc);
-
-            buf[buf_count++] = cc;
+        if (curr == 92)
+        { // consuming escape chars
+            token[t_cnt++] = curr;
+            _next_char(lexer, &curr);
+            token[t_cnt++] = curr;
         }
         else
         {
-            buf[buf_count++] = cc;
-            _next_char(lex, &cc);
+            token[t_cnt++] = curr;
+            _next_char(lexer, &curr);
         }
     }
 
-    /// add to tokens
-    printf("literal --> %s \n", buf);
+    //add to token
+    printf("literal --> %s \n", token);
 
-    return 0;
+    return RM_SUCCESS;
 }
 
-static inline int _punctuation(lexer *lex, char **tokens)
+const int _punctuation(lexer *lexer, rm_array *tokens)
 {
+    int curr;   // current char
+    int t_cnt;  // token char count
+    int p_cnt;  // peek char count
+    int status; // func. status
 
-    int cc;
-    int found;
-    int buf_count;
-    int cnsm_count;
-    char buf[BUF_SIZE];
-    char *peek_buf;
+    char token[TOK_SIZE];
+    char peek[PEK_SIZE];
 
-    const char *single_punct = ";{}[]()";
-    const char *mix_punct = "<>=!+-*%&|^/";
-    const char *identical_punct = "+-<>&|";
+    const char *sing_pt = ";{}[]()";     // single punctuations std.
+    const char *mix_pt = "<>=!+-*%&|^/"; // mix punctuations std.
+    const char *id_pt = "+-<>&|";        // identical punctuations std.
 
-    _curr_char(lex, &cc);
+    if (lexer == NULL || tokens == NULL)
+        return RM_FAIL;
 
-    if (!ispunct(cc))
-        return 1;
-    if (cc == 34 || cc == 39)
-        return 1;
+    curr = 0;
+    p_cnt = 0;
+    t_cnt = 0;
 
-    buf_count = 0;
-    memset(&buf, 0, BUF_SIZE);
+    memset(token, 0, TOK_SIZE);
+    memset(peek, 0, PEK_SIZE);
 
-    buf[buf_count++] = cc;
+    _curr_char(lexer, &curr);
 
-    if (strchr(single_punct, cc) != NULL)
+    if (!ispunct(curr))
+        return RM_FAIL;
+
+    if (curr == 34 || curr == 39)
+        return RM_FAIL;
+
+    token[t_cnt++] = curr;
+
+    if (strchr(sing_pt, curr) != NULL)
+        goto t_persist;
+
+    if (curr == '>')
     {
-        // add to token -- already added
+        p_cnt = 3;
+        _peek(lexer, peek, p_cnt);
 
-        printf("punctuation --> %s \n", buf);
-
-        return 0;
-    }
-
-    // >>>=    | 4
-    if (cc == '>')
-    {
-
-        cnsm_count = 3;
-
-        memset(peek_buf, 0, 3);
-        _peek(lex, peek_buf, cnsm_count);
-
-        if (strncmp(peek_buf, ">>=", cnsm_count) == 0)
+        if (strncmp(peek, ">>=", p_cnt) == 0)
         {
-            // add to token
-            strncpy(buf + 1, peek_buf, cnsm_count);
-            printf("punctuation --> %s \n", buf);
+            strncpy(token, peek, p_cnt);
 
-            while (cnsm_count--) // consuming
-                _next_char(lex, &cc);
-            return 1;
+            while (p_cnt--) // consuming
+                _next_char(lexer, &curr);
+
+            goto t_persist;
         }
     }
 
-    // <<= >>= >>>   | 3
-    if (cc == '<' || cc == '>')
+    if (curr == '<' || curr == '>')
     {
-        cnsm_count = 2;
+        p_cnt = 2;
 
-        memset(peek_buf, 0, 2);
-        _peek(lex, peek_buf, cnsm_count);
+        _peek(lexer, peek, p_cnt);
 
-        found = strncmp(peek_buf, ">>", cnsm_count) == 0;
-        found = found || strncmp(peek_buf, ">=", cnsm_count) == 0;
-        found = found || strncmp(peek_buf, "<=", cnsm_count) == 0;
+        status = strncmp(peek, ">>", p_cnt) == 0;
+        status = strncmp(peek, ">=", p_cnt) == 0 || status;
+        status = strncmp(peek, "<=", p_cnt) == 0 || status;
 
-        if (found)
+        if (status)
         {
-            // add to token
-            strncpy(buf + 1, peek_buf, cnsm_count);
-            printf("punctuation --> %s \n", buf);
+            strncpy(token, peek, p_cnt);
 
-            while (cnsm_count--)
-                _next_char(lex, &cc);
-            return 1;
+            while (p_cnt--) // consuming
+                _next_char(lexer, &curr);
+
+            goto t_persist;
         }
     }
 
-    if (strchr(mix_punct, cc) != NULL)
+    if (strchr(mix_pt, curr) != NULL)
     {
+        _peek(lexer, peek, 1);
 
-        _peek(lex, peek_buf, 1);
-
-        if (peek_buf[0] == '=')
+        if (peek[0] == '=')
         {
-            // add to token
-            buf[buf_count++] = peek_buf[0];
-            printf("punctuation --> %s \n", buf);
 
-            _next_char(lex, &cc); // consume
-            return 1;
+            token[t_cnt++] = peek[0];
+
+            _next_char(lexer, &curr); // consuming
+
+            goto t_persist;
         }
     }
 
-    if (strchr(identical_punct, cc) != NULL)
+    if (strchr(id_pt, curr) != NULL)
     {
+        _peek(lexer, peek, 1);
 
-        _peek(lex, peek_buf, 1);
-
-        if (peek_buf[0] == cc)
+        if (peek[0] == curr)
         {
+            token[t_cnt++] = peek[0];
 
-            // add to token
-            buf[buf_count++] = peek_buf[0];
-            printf("punctuation --> %s \n", buf);
-
-            _next_char(lex, &cc); // consume
-            return 1;
+            _next_char(lexer, &curr); // consuming
+            goto t_persist;
         }
     }
 
-    printf("punctuation --> %s \n", buf);
+t_persist:
+    // add to array
+    printf("number --> %s\n", token);
 
-    return 0;
+t_exit:
+
+    return RM_SUCCESS;
 }
 
-static inline int _identifier(lexer *lex, char **tokens)
+const int _identifier(lexer *lexer, rm_array *tokens)
 {
-    int cc;
-    int buf_count;
-    char buf[BUF_SIZE];
+    int curr;  // current char
+    int t_cnt; // token char count
 
-    _curr_char(lex, &cc);
+    char token[TOK_SIZE];
 
-    if (!isalnumundol(cc))
-        return 1;
+    if (lexer == NULL || tokens == NULL)
+        return RM_FAIL;
 
-    buf_count = 0;
+    curr = 0;
+    t_cnt = 0;
+    memset(token, 0, TOK_SIZE);
 
-    while (isalnumundol(cc))
+    _curr_char(lexer, &curr);
+
+    while (isalnumundol(curr))
     {
-        buf[buf_count++] = cc;
-        _next_char(lex, &cc);
+        token[t_cnt++] = curr;
+        _next_char(lexer, &curr);
     }
 
     // add to token
-    printf("identifier --> %s\n", buf);
-    return 0;
+
+    printf("identifier --> %s\n", token);
+
+    return RM_SUCCESS;
 }
 
-static inline int _comment(lexer *lex, char **tokens)
-{
-    int cc;
-    int found;
+const int _comment(lexer *lexer, rm_array *tokens)
+{               // might not work
+    int curr;   // current char
+    int status; // func. status
 
-    _curr_char(lex, &cc);
+    if (lexer == NULL || tokens == NULL)
+        return RM_FAIL;
 
-    _match(lex, '/', &found);
+    curr = 0;
+    status = 0;
 
-    if (cc == '/' && found)
-        while (cc != '\n')
-            _next_char(lex, &cc);
+    _curr_char(lexer, &curr);
+    _match(lexer, '/', &status, 0);
 
-    return 0;
+    if (curr == '/' && status)
+        while (curr != '\n')
+            _next_char(lexer, &curr);
+
+    return RM_SUCCESS;
 }
 
 #endif // RM_SPEC_JAVA

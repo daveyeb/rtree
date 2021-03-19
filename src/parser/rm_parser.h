@@ -20,6 +20,8 @@ static inline int scan_token(lexer *lex, struct language *lang, rm_array * a)
         // lang->rules.scan_punctuation(lex, tokens);
         // lang->rules.scan_literal(lex, tokens);
 
+        // printf("here %c\n", tmp_char);
+
         _next_char(lex, &tmp_char);
     }
 
