@@ -1,23 +1,39 @@
 
-
+#include <stdio.h>
 #include <string.h>
 
-#include "../src/parser/rm_parser.h"
+#include "../src/rm_parser.h"
 
 int main()
 {
 
+    FILE *fp;
     int src_cnt;
     rm_array a;
-    char *src = "1e1f    2.f    .3f    0f    3.14f    6.022137e+23f";
+    int c;
+    int q;
+    char buffer[4096] = {0};
 
-    src_cnt = strlen(src);
+    fp = fopen("Test.java", "r");
+    q = 0;
+    while (1)
+    {
+        c = fgetc(fp);
+        if (feof(fp))
+        {
+            break;
+        }
+        buffer[q++] = c;
+    }
+    fclose(fp);
 
-    lexer t = {0, 0, src_cnt, src};
+    src_cnt = strlen(buffer);
 
-    language b = {{&_numeric}, "Java"};
+    lexer t = {0, 0, src_cnt, buffer};
 
-    printf("die4guy\n");
+    language b = {{&_numeric, &_identifier, &_comment, &_punctuation, &_literal}, "Java"};
+
+    printf("die4guy\n\n");
 
     scan_token(&t, &b, &a);
 
