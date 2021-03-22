@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../src/rm_parser.h"
+#include "../src/rm_scanner.h"
 
 int main()
 {
@@ -31,11 +31,11 @@ int main()
 
     lexer t = {0, 0, src_cnt, buffer};
 
-    language b = {{&_numeric, &_identifier, &_comment, &_punctuation, &_literal}, "Java"};
+    language b = {{&_numeric, &_identifier, &_comment, &_punctuation, &_literal}, "All"};
 
     printf("die4guy\n\n");
 
-    scan_token(&t, &b, &a);
+    scan_token(&t, &a, &b);
 
     return 0;
 }

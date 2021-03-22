@@ -1,0 +1,20 @@
+repo
+    glob 
+    screen for valid files
+parser
+    tokens 
+    scanner
+    statemts 
+        for individual lang 
+    parser 
+rm 
+    evaluator 
+        for individual lang
+
+
+output 
+    command line 
+    web.js -- d3.js 
+
+
+file dependendcise

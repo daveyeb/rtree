@@ -147,4 +147,8 @@ static inline int _match(lexer *lex, int *found, char expected, int is_case)
     return 0;
 }
 
+
+const int rm_get_filelist(rm_array * filelist, const char * path, int sym_links);
+const int rm_screen_filelist(rm_array * filelist);
+
 #endif // RM_UTIL

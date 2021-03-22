@@ -1,5 +1,5 @@
-#ifndef RM_SPEC_JAVA
-#define RM_SPEC_JAVA
+#ifndef RM_SPEC
+#define RM_SPEC
 
 #include "rm_utils.h"
 #include "rm_array.h"
@@ -210,10 +210,7 @@ const int _punctuation(lexer *lexer, rm_array *tokens)
     token[t_cnt++] = curr;
 
     if (strchr(sing_pt, curr) != NULL)
-    {
-        // _next_char(lexer, &curr); // consuming
         goto t_persist;
-    }
 
     if (curr == '>')
     {
@@ -347,4 +344,4 @@ const int _comment(lexer *lexer, rm_array *tokens)
     return RM_SUCCESS;
 }
 
-#endif // RM_SPEC_JAVA
+#endif // RM_SPEC
