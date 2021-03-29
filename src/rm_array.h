@@ -17,19 +17,19 @@ typedef struct array
 
 } rm_array;
 
-int rm_array_init(rm_array *a, const size_t data_size, const size_t size);
-int rm_array_init_fill(rm_array *a, const size_t data_size, const size_t size, const void *c);
-int rm_array_copy(rm_array *a, rm_array *b);
-int rm_array_push_back(rm_array *a, const void *value);
-int rm_array_insert(rm_array *a, const size_t index, const void *value);
-int rm_array_delete(rm_array *a, const size_t index);
-int rm_array_get(rm_array *a, const size_t index, void *value); // get value
-int rm_array_clear(rm_array *a);
-int rm_array_destroy(rm_array *a);
+int rm_array_init(rm_array *array, const size_t data_size, const size_t size);
+int rm_array_init_fill(rm_array *array, const size_t data_size, const size_t size, const void *c);
+int rm_array_copy(rm_array *array, rm_array *b);
+int rm_array_push_back(rm_array *array, const void *value);
+int rm_array_insert(rm_array *array, const size_t index, const void *value);
+int rm_array_delete(rm_array *array, const size_t index);
+int rm_array_get(rm_array *array, const size_t index, void *value); // get value
+int rm_array_clear(rm_array *array);
+int rm_array_destroy(rm_array *array);
 
 // TODO : for each macro
 
-int rm_array_init(rm_array *a, const size_t data_size, const size_t size)
+int rm_array_init(rm_array *array, const size_t data_size, const size_t size)
 {
     int index;
 
@@ -38,28 +38,28 @@ int rm_array_init(rm_array *a, const size_t data_size, const size_t size)
 
     index = 0;
 
-    a->capacity = (size >= RM_DEFAULT_CAP) ? RM_DEFAULT_CAP * 2 : RM_DEFAULT_CAP;
-    a->size = 0;
-    a->data = calloc(a->capacity, sizeof(*a->data));
-    a->data_size = data_size;
+    array->capacity = (size >= RM_DEFAULT_CAP) ? RM_DEFAULT_CAP * 2 : RM_DEFAULT_CAP;
+    array->size = 0;
+    array->data = calloc(array->capacity, sizeof(*array->data));
+    array->data_size = data_size;
 
     while (index < size)
     {
-        (a->data)[index] = malloc(data_size);
+        (array->data)[index] = malloc(data_size);
 
         index++;
-        a->size++;
+        array->size++;
     }
 
     return RM_SUCCESS;
 }
 
-int rm_array_init_fill(rm_array *a, const size_t data_size, const size_t size, const void *c)
+int rm_array_init_fill(rm_array *array, const size_t data_size, const size_t size, const void *c)
 {
     int status;
     int index;
 
-    status = rm_array_init(a, data_size, size);
+    status = rm_array_init(array, data_size, size);
 
     if (status)
         return status;
@@ -68,60 +68,60 @@ int rm_array_init_fill(rm_array *a, const size_t data_size, const size_t size, c
 
     while (index < size)
     {
-        memcpy((a->data)[index], c, sizeof(a->data_size));
+        memcpy((array->data)[index], c, sizeof(array->data_size));
         index++;
     }
 
     return RM_SUCCESS;
 }
 
-int rm_array_destroy(rm_array *a)
+int rm_array_destroy(rm_array *array)
 {
     int index;
-    if (a == NULL)
+    if (array == NULL)
         return RM_SUCCESS;
 
     index = 0;
 
-    while (index < a->data_size)
+    while (index < array->data_size)
     {
-        free((a->data)[index]);
+        free((array->data)[index]);
         index++;
     }
 
-    free(a->data);
-    free(a);
+    free(array->data);
+    free(array);
 
     return RM_SUCCESS;
 }
 
-int rm_array_push_back(rm_array *a, const void *value)
+int rm_array_push_back(rm_array *array, const void *value)
 {
-    if (a == NULL)
+    if (array == NULL)
         return RM_FAIL;
 
-    if (a->size + 1 >= a->capacity)
+    if (array->size + 1 >= array->capacity)
         return RM_FAIL;
 
-    memcpy((a->data)[a->size], value, a->data_size);
+    memcpy((array->data)[array->size], value, array->data_size);
 
-    a->size++;
+    array->size++;
 
     // TODO: implement a resize functionality.
 
     return RM_SUCCESS;
 }
 
-int rm_array_insert(rm_array *a, const size_t index, const void *value)
+int rm_array_insert(rm_array *array, const size_t index, const void *value)
 {
 
-    if (a == NULL)
+    if (array == NULL)
         return RM_FAIL;
 
-    if (index >= a->capacity)
+    if (index >= array->capacity)
         return RM_FAIL;
 
-    memcpy((a->data)[index], value, a->data_size);
+    memcpy((array->data)[index], value, array->data_size);
 
     return RM_SUCCESS;
 }
@@ -164,30 +164,31 @@ int rm_array_insert(rm_array *a, const size_t index, const void *value)
 //     return 0;
 // }
 
-int rm_array_get(rm_array *a, const size_t index, void *value)
+int rm_array_get(rm_array *array, const size_t index, void *value)
 {
 
-    if (a == NULL)
+    if (array == NULL)
         return RM_FAIL;
 
-    if (index < 0 || index >= a->capacity)
+    if (index < 0 || index >= array->capacity)
         return RM_FAIL;
 
-    memcpy(value, (a->data)[index], sizeof(void *));
+    memcpy(value, (array->data)[index], sizeof(void *));
 
     return RM_SUCCESS;
 }
 
-int rm_array_clear(rm_array *a)
+int rm_array_clear(rm_array *array)
 {
     int index;
 
-    if (a == NULL)
+    if (array == NULL)
         return RM_FAIL;
 
     index = 0;
-    while (index < a->size)
-        memset((a->data)[index++], 0, a->capacity);
+    
+    while (index < array->size)
+        memset((array->data)[index++], 0, array->size);
 
     return RM_SUCCESS;
 }
