@@ -10,10 +10,6 @@
 #define TOK_SIZE 4906
 #define PEK_SIZE 100
 
-#define RM_DEFAULT_CAP 10
-#define RM_STRING_SIZE_CAP 256
-#define RM_INT_SIZE_CAP 4
-
 #define RM_SUCCESS 0
 #define RM_FAIL 1
 
