@@ -15,21 +15,42 @@
 
 #include "rm_list.h"
 
-typedef enum token_t
+typedef enum type
 {
-    RC_INDENTIFIER,
-    RC_LITERAL,
-    RC_KEYWORD,
-    RC_PUNCTUATION,
-    RC_ENDOFFILE
-} token_t;
+    // keywords
+    FROM,
+    IMPORT,
+    AS,
+    USE,
+    LOAD,
+    REQUIRE,
+    INCLUDE,
+    // puncts.
+    LTHAN,
+    GTHAN,
+    COMMA,
+    ASTERISKS,
+    SEMICOLON,
+    OCBRACKS,
+    CCBRACKS,
+    OPARENS,
+    CPARENS,
+    DQUOTES,
+    SQUOTES,
+    POUND,
+    FSLASH,
+    // literals.
+    STRING,
+    NUMBER,
+    LITERAL,
+} rm_token_t;
 
 typedef struct token
 {
-    token_t type;
-    char *value;
-    char *raw;
-} _rc_token_t;
+    int type;
+    char value[256];
+    char raw[256];
+} rm_token;
 
 typedef struct lexer
 {
@@ -37,22 +58,22 @@ typedef struct lexer
     unsigned int current;
     unsigned int length;
     char *buf;
-} lexer;
+} rm_lexer;
 
 struct rules_vtable
 {
-    const int (*scan_numeric)(lexer *p, rm_list *tokens);
-    const int (*scan_identifier)(lexer *p, rm_list *tokens);
-    const int (*skip_comment)(lexer *p, rm_list *tokens);
-    const int (*scan_punctuation)(lexer *p, rm_list *tokens);
-    const int (*scan_literal)(lexer *p, rm_list *tokens);
+    const int (*scan_numeric)(rm_lexer *p, rm_list *tokens);
+    const int (*scan_identifier)(rm_lexer *p, rm_list *tokens);
+    const int (*skip_comment)(rm_lexer *p, rm_list *tokens);
+    const int (*scan_punctuation)(rm_lexer *p, rm_list *tokens);
+    const int (*scan_literal)(rm_lexer *p, rm_list *tokens);
 };
 
 typedef struct language
 {
     struct rules_vtable rules;
     const char *name;
-} language;
+} rm_language;
 
 int isbinary(int c)
 {
@@ -64,12 +85,12 @@ int isalnumundol(char c)
     return isalnum(c) || c == 95 || c == 36;
 }
 
-static inline int _peek(lexer *lex, char *result, int n_pos);
-static inline int _curr_char(lexer *lex, int *c);
-static inline int _next_char(lexer *lex, int *c);
-static inline int _match(lexer *lex, int *found, char expected, int is_case);
+static inline int _peek(rm_lexer *lex, char *result, int n_pos);
+static inline int _curr_char(rm_lexer *lex, int *c);
+static inline int _next_char(rm_lexer *lex, int *c);
+static inline int _match(rm_lexer *lex, int *found, char expected, int is_case);
 
-static inline int _peek(lexer *lex, char *result, int n_pos)
+static inline int _peek(rm_lexer *lex, char *result, int n_pos)
 {
     int buf_len;
     int temp_curr;
@@ -85,7 +106,7 @@ static inline int _peek(lexer *lex, char *result, int n_pos)
     return 0;
 }
 
-static inline int _curr_char(lexer *lex, int *c)
+static inline int _curr_char(rm_lexer *lex, int *c)
 {
     int buf_len;
 
@@ -99,7 +120,7 @@ static inline int _curr_char(lexer *lex, int *c)
     return 0;
 }
 
-static inline int _next_char(lexer *lex, int *c)
+static inline int _next_char(rm_lexer *lex, int *c)
 {
     int buf_len;
 
@@ -115,7 +136,7 @@ static inline int _next_char(lexer *lex, int *c)
     return 0;
 }
 
-static inline int _match(lexer *lex, int *found, char expected, int is_case)
+static inline int _match(rm_lexer *lex, int *found, char expected, int is_case)
 { // idgt
     int buf_len;
     int curr;
