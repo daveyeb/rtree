@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/rm_array.h"
+#include "../src/rm_list.h"
 #include <limits.h>
 
 int main(){
