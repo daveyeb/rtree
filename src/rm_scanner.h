@@ -3,9 +3,9 @@
 
 #include "rm_spec.h"
 
-static inline int scan_token(lexer *lexer, rm_array *tokens, struct language *lang);
+static inline int scan_token(lexer *lexer, rm_list *tokens, struct language *lang);
 
-static inline int scan_token(lexer *lexer, rm_array *tokens, struct language *lang)
+static inline int scan_token(lexer *lexer, rm_list *tokens, struct language *lang)
 {
     int skip; // needed to skip whitespaces and already consumed chars
 
