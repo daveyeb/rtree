@@ -4,13 +4,13 @@
 #include "rm_utils.h"
 #include "rm_list.h"
 
-const int _numeric(lexer *lexer, rm_list *tokens);
-const int _literal(lexer *lexer, rm_list *tokens);
-const int _punctuation(lexer *lexer, rm_list *tokens);
-const int _identifier(lexer *lexer, rm_list *tokens);
-const int _comment(lexer *lexer, rm_list *tokens);
+const int _numeric(rm_lexer *lexer, rm_list *tokens);
+const int _literal(rm_lexer *lexer, rm_list *tokens);
+const int _punctuation(rm_lexer *lexer, rm_list *tokens);
+const int _identifier(rm_lexer *lexer, rm_list *tokens);
+const int _comment(rm_lexer *lexer, rm_list *tokens);
 
-const int _numeric(lexer *lexer, rm_list *tokens)
+const int _numeric(rm_lexer *lexer, rm_list *tokens)
 {
 
     int curr;                     // current char
@@ -127,7 +127,7 @@ t_exit:
     return RM_SUCCESS;
 }
 
-const int _literal(lexer *lexer, rm_list *tokens)
+const int _literal(rm_lexer *lexer, rm_list *tokens)
 {
     int curr;   // current char
     int t_cnt;  // token char count
@@ -175,12 +175,17 @@ const int _literal(lexer *lexer, rm_list *tokens)
     return RM_SUCCESS;
 }
 
-const int _punctuation(lexer *lexer, rm_list *tokens)
+const int _punctuation(rm_lexer *lexer, rm_list *tokens)
 {
     int curr;   // current char
     int t_cnt;  // token char count
     int p_cnt;  // peek char count
     int status; // func. status
+
+
+    rm_token * name = malloc(1);
+
+    printf("address %d ", name->type);
 
     char token[TOK_SIZE];
     char peek[PEK_SIZE];
@@ -289,7 +294,7 @@ t_exit:
     return RM_SUCCESS;
 }
 
-const int _identifier(lexer *lexer, rm_list *tokens)
+const int _identifier(rm_lexer *lexer, rm_list *tokens)
 {
     int curr;  // current char
     int t_cnt; // token char count
@@ -321,7 +326,7 @@ const int _identifier(lexer *lexer, rm_list *tokens)
     return RM_SUCCESS;
 }
 
-const int _comment(lexer *lexer, rm_list *tokens)
+const int _comment(rm_lexer *lexer, rm_list *tokens)
 {               // might not work
     int curr;   // current char
     int status; // func. status
