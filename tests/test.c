@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// #include "../src/rm_array.h"
+#include "../src/rm_array.h"
 #include <limits.h>
 
 int main(){
@@ -23,14 +23,27 @@ int main(){
     // status |= rm_array_clear(&a);
     // printf("retrieved val %d\n", c);
 
+    rm_list tmp; 
+    int sorry = 5;
+
+    rm_list_init_fill(&tmp, RM_INT_SIZE_CAP, 8, &sorry);
+    _ensure_cap(&tmp, 11);
+
+
+
+
+
     printf("%d max\n", INT_MAX);
 
 
-    // int b = 0;
-    // for(; b < a.capacity; b++){
-    //     printf(" %d element %d\n", b, *((int **)a.data)[b]);
-    // }
+    int b = 0;
+    for(; b < tmp.capacity; b++){
+        printf(" %d element %d\n", b, *((int **)tmp.data)[b]);
 
+        if(b == 20) break; 
+    }
+
+    printf("tmp cap %d\n", tmp.capacity);
 
     // status |= rm_array_destroy(&a);
     // status |= rm_array_destroy(&q);
