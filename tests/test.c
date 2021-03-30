@@ -2,30 +2,45 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../src/rm_array.h"
-
+// #include "../src/rm_array.h"
+#include <limits.h>
 
 int main(){
 
-    rm_array a;
-    int c = 5;
+    // int status;
+    // rm_list a;
+    // rm_list q;
+    // int c = 5;
+    // int y = 9;
 
-    rm_array_init_fill(&a, RM_INT_SIZE_CAP, 3, &c);
+    // status = rm_array_init_fill(&a, RM_INT_SIZE_CAP, 3, &c);
+    // status |= rm_array_copy(&q, &a);
 
-    printf("address %d\n", (int **)a.data);
-    printf("address %zu\n", a.data_size);
-    printf("address %zun", a.capacity);
-    printf("address %zu\n", a.size);
+    // status |= rm_array_add(&a, &y);
+    // status |= rm_array_insert(&a, 1, &y);
+    // status |= rm_array_delete(&a, 0);
+    // status |= rm_array_get(&a, 3,&c);
+    // status |= rm_array_clear(&a);
+    // printf("retrieved val %d\n", c);
 
-
-
-    int b = 0;
-    for(b; b < a.size; b++){
-        printf("--------\n");
-        printf("love %zu\n", * ((int **)a.data)[b]);
-
-        printf("total size of %d\n\n", sizeof(((int **)a.data)[b]));
-    }
+    printf("%d max\n", INT_MAX);
 
 
+    // int b = 0;
+    // for(; b < a.capacity; b++){
+    //     printf(" %d element %d\n", b, *((int **)a.data)[b]);
+    // }
+
+
+    // status |= rm_array_destroy(&a);
+    // status |= rm_array_destroy(&q);
+
+    // printf("here is the status %d\n", status);
+    return 0; 
 }
+
+
+    // printf("address %d\n", (int **)a.data);
+    // printf("address %zu\n", a.data_size);
+    // printf("address %zun", a.capacity);
+    // printf("address %zu\n", a.size);
