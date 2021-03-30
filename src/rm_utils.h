@@ -13,7 +13,7 @@
 #define RM_SUCCESS 0
 #define RM_FAIL 1
 
-#include "rm_array.h"
+#include "rm_list.h"
 
 typedef enum token_t
 {
@@ -41,11 +41,11 @@ typedef struct lexer
 
 struct rules_vtable
 {
-    const int (*scan_numeric)(lexer *p, rm_array *tokens);
-    const int (*scan_identifier)(lexer *p, rm_array *tokens);
-    const int (*skip_comment)(lexer *p, rm_array *tokens);
-    const int (*scan_punctuation)(lexer *p, rm_array *tokens);
-    const int (*scan_literal)(lexer *p, rm_array *tokens);
+    const int (*scan_numeric)(lexer *p, rm_list *tokens);
+    const int (*scan_identifier)(lexer *p, rm_list *tokens);
+    const int (*skip_comment)(lexer *p, rm_list *tokens);
+    const int (*scan_punctuation)(lexer *p, rm_list *tokens);
+    const int (*scan_literal)(lexer *p, rm_list *tokens);
 };
 
 typedef struct language
@@ -93,7 +93,7 @@ static inline int _curr_char(lexer *lex, int *c)
 
     if (lex->current < buf_len)
         *c = lex->buf[lex->current];
-    else 
+    else
         *c = 0;
 
     return 0;
@@ -109,7 +109,7 @@ static inline int _next_char(lexer *lex, int *c)
     buf_len = strlen(lex->buf);
     if (lex->current < buf_len)
         *c = lex->buf[++lex->current];
-    else 
+    else
         *c = 0;
 
     return 0;
@@ -143,8 +143,7 @@ static inline int _match(lexer *lex, int *found, char expected, int is_case)
     return 0;
 }
 
-
-const int rm_get_filelist(rm_array * filelist, const char * path, int sym_links);
-const int rm_screen_filelist(rm_array * filelist);
+const int rm_get_filelist(rm_list *filelist, const char *path, int sym_links);
+const int rm_screen_filelist(rm_list *filelist);
 
 #endif // RM_UTIL
