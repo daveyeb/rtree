@@ -2,6 +2,11 @@
 #define RM_LIST
 
 #include <limits.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <ctype.h>
 
 #define RM_DEFAULT_CAP 10
 #define RM_STRING_SIZE_CAP 256
@@ -26,7 +31,7 @@ int rm_list_copy(rm_list *src, rm_list *dest);
 int rm_list_add(rm_list *array, const void *value);
 int rm_list_insert(rm_list *array, const size_t index, const void *value);
 int rm_list_delete(rm_list *array, const size_t index);
-int rm_list_get(rm_list *array, const size_t index, void *value); 
+int rm_list_get(rm_list *array, const size_t index, void *value);
 int rm_list_clear(rm_list *array);
 int rm_list_destroy(rm_list *array);
 
@@ -85,7 +90,7 @@ int _copy_of(rm_list *old, const size_t size)
     index = 0;
 
     // allocating new array
-    out = calloc(size, sizeof(*out));
+    out = (void **)calloc(size, sizeof(*out));
 
     while (index < size)
     {
@@ -134,7 +139,7 @@ int rm_list_init(rm_list *array, const size_t data_size)
 
     array->size = 0;
     array->capacity = RM_DEFAULT_CAP;
-    array->data = calloc(array->capacity, sizeof(*array->data));
+    array->data = (void **)calloc(array->capacity, sizeof(*array->data));
     array->data_size = data_size;
 
     while (index < array->capacity)
@@ -220,7 +225,7 @@ int rm_list_add(rm_list *array, const void *value)
     if (array->size + 1 >= array->capacity)
         return RM_FAIL;
 
-    _ensure_cap(array, ( array->size + 1));
+    _ensure_cap(array, (array->size + 1));
     memcpy((array->data)[array->size], value, array->data_size);
 
     array->size++;
