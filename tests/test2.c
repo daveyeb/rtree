@@ -11,7 +11,7 @@ int main(){
 
     rm_token tmp;
 
-    snprintf(tmp.value,5, "David");
+    snprintf(tmp.value,6, "David");
 
 
     tmp.type = 9;
@@ -23,7 +23,7 @@ int main(){
 
     // ((rm_token *)test)->type;
 
-    printf("please let the be light %s", ((rm_token *)test)->value);
+    printf("please let the be light %s\n", ((rm_token *)test)->raw);
     
 
     return 0;

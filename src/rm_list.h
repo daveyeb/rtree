@@ -22,7 +22,6 @@ typedef struct list
     size_t data_size;
     size_t capacity;
     size_t size;
-
 } rm_list;
 
 int rm_list_init(rm_list *array, const size_t data_size);
@@ -45,7 +44,6 @@ int _copy_of(rm_list *old, const size_t size);
 int _ensure_cap(rm_list *array, const size_t min_cap)
 {
     // investigate modcount
-
     if (min_cap - array->capacity > 0)
         _grow(array, min_cap);
 
@@ -100,7 +98,6 @@ int _copy_of(rm_list *old, const size_t size)
     }
 
     // copy old data to new
-
     index = 0;
     while (index < old->capacity)
     {
@@ -110,7 +107,6 @@ int _copy_of(rm_list *old, const size_t size)
     }
 
     // freeing old data
-
     index = 0;
     while (index < old->capacity)
     {

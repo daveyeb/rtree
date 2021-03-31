@@ -19,8 +19,10 @@ const int _numeric(rm_lexer *lexer, rm_list *tokens)
     int status;                   // function status
     int (*ctype_func_ptr)(int c); // function pointer
 
-    char token[TOK_SIZE]; // token buffer
-    char peek[PEK_SIZE];  // peek buffer
+    char t_buffer[TOK_SIZE]; // token buffer
+    char p_buffer[PEK_SIZE]; // peek buffer
+
+    rm_token token; // token
 
     if (lexer == NULL || tokens == NULL)
         return RM_FAIL;
@@ -29,8 +31,8 @@ const int _numeric(rm_lexer *lexer, rm_list *tokens)
     p_cnt = 0;
     t_cnt = 0;
 
-    memset(token, 0, TOK_SIZE);
-    memset(peek, 0, PEK_SIZE);
+    memset(t_buffer, 0, TOK_SIZE);
+    memset(p_buffer, 0, PEK_SIZE);
 
     _curr_char(lexer, &curr);
 
@@ -45,7 +47,7 @@ const int _numeric(rm_lexer *lexer, rm_list *tokens)
             if (curr == '.')
                 ++p_cnt;
 
-            token[t_cnt++] = curr;
+            t_buffer[t_cnt++] = curr;
             _next_char(lexer, &curr);
 
             if (curr == '_') // skip underscores
@@ -58,7 +60,7 @@ const int _numeric(rm_lexer *lexer, rm_list *tokens)
         if (curr == ' ')
             goto t_postfix;
 
-        if (t_cnt != 1 && token[0] != '0')
+        if (t_cnt != 1 && t_buffer[0] != '0')
             goto t_postfix;
 
         if (curr != 'x' && curr != 'b')
@@ -69,12 +71,12 @@ const int _numeric(rm_lexer *lexer, rm_list *tokens)
 
         ctype_func_ptr = (curr == 'x') ? &isxdigit : &isbinary;
 
-        token[t_cnt++] = curr;    // add to token buffer
+        t_buffer[t_cnt++] = curr; // add to token buffer
         _next_char(lexer, &curr); // consume x or b
 
         while (ctype_func_ptr(curr))
         {
-            token[t_cnt++] = curr;
+            t_buffer[t_cnt++] = curr;
             _next_char(lexer, &curr);
 
             if (curr == '_') // skip underscores
@@ -86,20 +88,20 @@ const int _numeric(rm_lexer *lexer, rm_list *tokens)
     else
     {
 
-        _peek(lexer, &peek[0], 1);
+        _peek(lexer, &p_buffer[0], 1);
 
         if (curr != '.')
             goto t_exit;
 
-        if (isdigit(peek[0]) == 0)
+        if (isdigit(p_buffer[0]) == 0)
             goto t_exit;
 
-        token[t_cnt++] = curr;
+        t_buffer[t_cnt++] = curr;
         _next_char(lexer, &curr);
 
         while (isdigit(curr))
         {
-            token[t_cnt++] = curr;
+            t_buffer[t_cnt++] = curr;
             _next_char(lexer, &curr);
         }
     }
@@ -114,13 +116,17 @@ t_postfix:
     if (!status)
         goto t_persist;
 
-    token[t_cnt++] = curr;
+    t_buffer[t_cnt++] = curr;
 
     // TODO : implement octal functionality
 
 t_persist:
     // add to array
-    printf("number --> %s\n", token);
+    token.type = NUMBER;
+    snprintf(token.value, strlen(t_buffer) + 1, "%s", t_buffer);
+    rm_list_add(tokens, &token);
+
+    printf("number --> %s\n", t_buffer);
 
 t_exit:
 
@@ -134,7 +140,8 @@ const int _literal(rm_lexer *lexer, rm_list *tokens)
     int qt;     // quotation mark char
     int status; // func. status
 
-    char token[TOK_SIZE];
+    char t_buffer[TOK_SIZE]; // token buffer
+    rm_token token;
 
     if (lexer == NULL || tokens == NULL)
         return RM_FAIL;
@@ -142,7 +149,7 @@ const int _literal(rm_lexer *lexer, rm_list *tokens)
     curr = 0;
     t_cnt = 0;
 
-    memset(token, 0, TOK_SIZE);
+    memset(t_buffer, 0, TOK_SIZE);
 
     _curr_char(lexer, &curr);
 
@@ -157,20 +164,25 @@ const int _literal(rm_lexer *lexer, rm_list *tokens)
 
         if (curr == 92)
         { // consuming escape chars
-            token[t_cnt++] = curr;
+            t_buffer[t_cnt++] = curr;
             _next_char(lexer, &curr);
-            token[t_cnt++] = curr;
+            t_buffer[t_cnt++] = curr;
         }
         else
         {
-            token[t_cnt++] = curr;
+            t_buffer[t_cnt++] = curr;
         }
 
         _next_char(lexer, &curr);
     }
 
     //add to token
-    printf("literal --> %s \n", token);
+    token.type = LITERAL;
+    snprintf(token.value, strlen(t_buffer) + 1, "%s", t_buffer);
+    snprintf(token.raw, strlen(t_buffer) + 3, "\"%s\"", t_buffer);
+
+    rm_list_add(tokens, &token);
+    printf("literal --> %s \n", t_buffer);
 
     return RM_SUCCESS;
 }
@@ -182,8 +194,7 @@ const int _punctuation(rm_lexer *lexer, rm_list *tokens)
     int p_cnt;  // peek char count
     int status; // func. status
 
-
-    rm_token * name = malloc(1);
+    rm_token *name = malloc(1);
 
     printf("address %d ", name->type);
 
