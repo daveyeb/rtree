@@ -31,7 +31,7 @@ int _numeric(rm_scanner *scanner, std::vector<token> tokens)
     pcnt = 0;
     tcnt = 0;
 
-    rm_scurrc(scanner, &curr);
+    rm_scurrc(scanner, curr);
 
     status = isdigit(curr);
     if (status)
@@ -44,13 +44,13 @@ int _numeric(rm_scanner *scanner, std::vector<token> tokens)
                 ++pcnt;
 
             tbuff.push_back(curr);
-            rm_snextc(scanner, &curr);
+            rm_snextc(scanner, curr);
 
             if (curr == '_')
-                while (!rm_smatch(scanner, &status, '_', 0))
+                while (!rm_smatch(scanner, status, '_', 0))
                     ;
 
-            rm_scurrc(scanner, &curr);
+            rm_scurrc(scanner, curr);
         }
 
         if (isspace(curr))
@@ -65,18 +65,18 @@ int _numeric(rm_scanner *scanner, std::vector<token> tokens)
         rm_func = (curr == 'x') ? &isxdigit : &isbi;
 
         tbuff.push_back(curr);
-        rm_snextc(scanner, &curr);
+        rm_snextc(scanner, curr);
 
         while (rm_func(curr))
         {
             tbuff.push_back(curr);
-            rm_snextc(scanner, &curr);
+            rm_snextc(scanner, curr);
 
             if (curr == '_')
-                while (!rm_smatch(scanner, &status, '_', 0))
+                while (!rm_smatch(scanner, status, '_', 0))
                     ;
 
-            rm_scurrc(scanner, &curr);
+            rm_scurrc(scanner, curr);
         }
     }
     else
@@ -87,12 +87,12 @@ int _numeric(rm_scanner *scanner, std::vector<token> tokens)
             goto exit;
 
         tbuff.push_back(curr);
-        rm_scurrc(scanner, &curr);
+        rm_scurrc(scanner, curr);
 
         while (isdigit(curr))
         {
             tbuff.push_back(curr);
-            rm_scurrc(scanner, &curr);
+            rm_scurrc(scanner, curr);
         }
     }
 
@@ -136,20 +136,20 @@ int _literal(rm_scanner *scanner, std::vector<token> tokens)
     curr = 0;
     tcnt = 0;
 
-    rm_scurrc(scanner, &curr);
+    rm_scurrc(scanner, curr);
 
     if (!issdq(curr))
         return 1;
 
     qch = curr;
-    rm_snextc(scanner, &curr);
+    rm_snextc(scanner, curr);
 
     while (curr != qch)
     {
         if (curr == 92)
         {
             tbuff.push_back(curr);
-            rm_snextc(scanner, &curr);
+            rm_snextc(scanner, curr);
             tbuff.push_back(curr);
         }
         else
@@ -157,7 +157,7 @@ int _literal(rm_scanner *scanner, std::vector<token> tokens)
             tbuff.push_back(curr);
         }
 
-        rm_snextc(scanner, &curr);
+        rm_snextc(scanner, curr);
     }
 
     token.type = LITERAL;
@@ -193,7 +193,7 @@ int _punctuation(rm_scanner *scanner, std::vector<token> tokens)
     curr = 0;
     pcnt = 0;
 
-    rm_scurrc(scanner, &curr);
+    rm_scurrc(scanner, curr);
 
     if (!ispunct(curr))
         return 1;
@@ -216,7 +216,7 @@ int _punctuation(rm_scanner *scanner, std::vector<token> tokens)
             tbuff += pbuff;
 
             while (pcnt--)
-                rm_snextc(scanner, &curr);
+                rm_snextc(scanner, curr);
 
             goto persist;
         }
@@ -240,7 +240,7 @@ int _punctuation(rm_scanner *scanner, std::vector<token> tokens)
             tbuff += pbuff;
 
             while (pcnt--)
-                rm_snextc(scanner, &curr);
+                rm_snextc(scanner, curr);
 
             goto persist;
         }
@@ -259,7 +259,7 @@ int _punctuation(rm_scanner *scanner, std::vector<token> tokens)
         {
             tbuff += pbuff[0];
 
-            rm_snextc(scanner, &curr);
+            rm_snextc(scanner, curr);
             goto persist;
         }
     }
@@ -343,7 +343,7 @@ int _identifier(rm_scanner *scanner, std::vector<token> tokens)
     curr = 0;
     tcnt = 0;
 
-    rm_scurrc(scanner, &curr);
+    rm_scurrc(scanner, curr);
 
     if (!isalnd(curr))
         return 1;
@@ -351,7 +351,7 @@ int _identifier(rm_scanner *scanner, std::vector<token> tokens)
     while (isalnd(curr))
     {
         tbuff += curr;
-        rm_snextc(scanner, &curr);
+        rm_snextc(scanner, curr);
     }
 
     token.type = STRING;
@@ -384,13 +384,13 @@ int _comment(rm_scanner *scanner, std::vector<token> tokens)
     curr = 0;
     status = 0;
 
-    rm_smatch(scanner, &status, '/', 0);
-    rm_scurrc(scanner, &curr);
+    rm_smatch(scanner, status, '/', 0);
+    rm_scurrc(scanner, curr);
 
     if (curr == '/' & status)
         while (curr != 0 && curr != '\n')
         {
-            rm_scurrc(scanner, &curr);
+            rm_scurrc(scanner, curr);
         }
 
     return 0;

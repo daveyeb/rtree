@@ -40,23 +40,9 @@ typedef enum types
 typedef struct token
 {
     rm_ttypes type;
-    std::string lexeme; 
-    std::string raw; 
+    std::string lexeme;
+    std::string raw;
 } rm_token;
-
-typedef struct srules
-{
-    int (*_numeric)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (*_identifier)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (*_comment)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (*_punctuation)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (*_literal)(rm_scanner *p, std::vector<rm_token> tokens);
-} rm_srules;
-
-typedef struct prules
-{
-    int (*_java)(rm_parser *p, std::vector<rm_token> tokens);
-} rm_srules;
 
 typedef struct scanner
 {
@@ -74,6 +60,27 @@ typedef struct parser
     std::vector<token> tbuffer;
 } rm_parser;
 
+typedef struct srules
+{
+    int (*_numeric)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (*_identifier)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (*_comment)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (*_punctuation)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (*_literal)(rm_scanner *p, std::vector<rm_token> tokens);
+} rm_srules;
+
+typedef struct statement
+{
+    std::string file;
+    std::string inc;
+    std::string alias;
+    int type;
+} rm_statement;
+
+typedef struct prules
+{
+    int (*_java)(rm_parser *p, std::vector<rm_statement> statement);
+} rm_prules;
 
 int isbi(int c);
 int isalnd(int c);
@@ -81,13 +88,17 @@ int issdq(int c);
 
 int isdecfll(int c);
 int isbihexl(int c);
+int strcont(std::string a, std::string b);
+
+int istokeq(token a, token b);
 
 int isbi(int c)
 {
     return (c == 48 || c == 49);
 }
 
-int issdq(int c){
+int issdq(int c)
+{
 
     return (c == 34 || c == 39);
 }
@@ -104,9 +115,25 @@ int isdecfll(int curr)
     return ilch.find(curr) == std::string::npos || isdigit(curr);
 }
 
-int isbihexl(int c){
-    
+int isbihexl(int c)
+{
+
     return c == 'x' || c == 'b';
+}
+
+int istokeq(token a, token b)
+{
+    int result;
+
+    result = a.type == b.type;
+    result = a.lexeme.compare(b.lexeme) == 0 && result;
+    result = a.raw.compare(b.raw) == 0 && result;
+
+    return result;
+}
+
+int strcont(std::string a, std::string b){
+    return (a.find(b) == std::string::npos);
 }
 
 #endif // rm_utils

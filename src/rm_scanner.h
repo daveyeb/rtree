@@ -4,9 +4,9 @@
 #include "rm_utils.h"
 
 int rm_speek(rm_scanner *scanner, std::string result, int npos);
-int rm_smatch(rm_scanner *scanner, int *result, char expected, int iscase);
-int rm_scurrc(rm_scanner *scanner, int *c);
-int rm_snextc(rm_scanner *scanner, int *c);
+int rm_smatch(rm_scanner *scanner, int &result, char expected, int iscase);
+int rm_scurrc(rm_scanner *scanner, int &c);
+int rm_snextc(rm_scanner *scanner, int &c);
 
 int rm_speek(rm_scanner *scanner, std::string result, int npos)
 {
@@ -27,7 +27,7 @@ int rm_speek(rm_scanner *scanner, std::string result, int npos)
     return 0;
 }
 
-int rm_smatch(rm_scanner *scanner, int *result, char expected, int iscase)
+int rm_smatch(rm_scanner *scanner, int &result, char expected, int iscase)
 {
     int blen;
     int curr;
@@ -36,7 +36,7 @@ int rm_smatch(rm_scanner *scanner, int *result, char expected, int iscase)
     if (scanner == NULL || result == NULL)
         return 1;
 
-    *result = 0;
+    result = 0;
     blen = scanner->sbuffer.length();
     curr = scanner->current;
     cch = (iscase) ? toupper(scanner->sbuffer[curr]) : scanner->sbuffer[curr];
@@ -44,13 +44,13 @@ int rm_smatch(rm_scanner *scanner, int *result, char expected, int iscase)
     if ((curr >= blen) || (cch != expected))
         return 1;
 
-    *result = 1;
+    result = 1;
     ++scanner->current;
 
     return 0;
 }
 
-int rm_scurrc(rm_scanner *scanner, int *c)
+int rm_scurrc(rm_scanner *scanner, int &c)
 {
     int blen;
     int curr;
@@ -62,14 +62,14 @@ int rm_scurrc(rm_scanner *scanner, int *c)
     curr = scanner->current;
 
     if (curr < blen)
-        *c = scanner->sbuffer[curr];
+        c = scanner->sbuffer[curr];
     else
-        *c = 0;
+        c = 0;
 
     return 0;
 }
 
-int rm_snextc(rm_scanner *scanner, int *c)
+int rm_snextc(rm_scanner * scanner, int &c)
 {
     int blen;
     int curr;
@@ -81,9 +81,9 @@ int rm_snextc(rm_scanner *scanner, int *c)
     curr = scanner->current;
 
     if (curr < blen)
-        *c = scanner->sbuffer[++curr];
+        c = scanner->sbuffer[++curr];
     else
-        *c = 0;
+        c = 0;
 
     scanner->current = curr;
 
