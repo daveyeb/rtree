@@ -33,7 +33,7 @@ int rm_smatch(rm_scanner *scanner, int &result, char expected, int iscase)
     int curr;
     int cch;
 
-    if (scanner == NULL || result == NULL)
+    if (scanner == NULL)
         return 1;
 
     result = 0;
@@ -55,7 +55,7 @@ int rm_scurrc(rm_scanner *scanner, int &c)
     int blen;
     int curr;
 
-    if (scanner == NULL || c == NULL)
+    if (scanner == NULL )
         return 1;
 
     blen = scanner->sbuffer.length();
@@ -74,7 +74,7 @@ int rm_snextc(rm_scanner * scanner, int &c)
     int blen;
     int curr;
 
-    if (scanner == NULL || c == NULL)
+    if (scanner == NULL )
         return 1;
 
     blen = scanner->sbuffer.length();

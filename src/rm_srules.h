@@ -111,6 +111,8 @@ persist:
     token.type = NUMBER;
     token.lexeme = tbuff;
 
+    printf("number --> %s\n", tbuff.c_str());
+
     tokens.push_back(token);
 
 exit:
@@ -166,6 +168,8 @@ int _literal(rm_scanner *scanner, std::vector<token> tokens)
     token.raw += "\"";
     token.raw += tbuff;
     token.raw += "\"";
+
+    printf("literal --> %s\n", tbuff.c_str());
 
     tokens.push_back(token);
 
@@ -228,7 +232,7 @@ int _punctuation(rm_scanner *scanner, std::vector<token> tokens)
 
         rm_speek(scanner, pbuff, pcnt);
 
-        int npos = std::string::npos;
+        long long unsigned int npos = std::string::npos;
 
         status = pbuff.find(">>") != npos;
         status |= pbuff.find(">=") != npos;
@@ -321,6 +325,8 @@ persist:
     token.lexeme += tbuff;
     tokens.push_back(token);
 
+    printf("punctuation --> %s\n", tbuff.c_str());
+
 exit:
     return 0;
 }
@@ -366,6 +372,8 @@ int _identifier(rm_scanner *scanner, std::vector<token> tokens)
     //comparing
 
     // add to tokens
+
+    printf("identifier --> %s\n", tbuff.c_str());
 
     token.lexeme += tbuff;
     tokens.push_back(token);

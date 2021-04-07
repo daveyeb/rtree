@@ -1,11 +1,13 @@
 #ifndef RM
 #define RM
 
-#include "rm_utils.h"
+#include <stdio.h>
+#include <string.h>
 
+#include "rm_utils.h"
 #include "rm_srules.h"
 
-static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> tokens);
+static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> tokens, rm_srules rules);
 
 static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> tokens, rm_srules rules)
 {
@@ -23,11 +25,44 @@ static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> tokens,
         rules._literal(scanner, tokens);
 
         // skip whitespaces and already consumed characters
-        rm_snextc(scanner, &adch);
+        rm_snextc(scanner, adch);
     }
 
     return 0;
 }
 
+int main()
+{
+
+    int idx;
+    int c;
+    unsigned int inlen;
+    FILE *file;
+    char buff[4906] = {0};
+    std::vector<token> toks;
+
+    file = fopen("input", "r");
+
+    idx = 0;
+    while (1)
+    {
+        idx = fgetc(file);
+
+        if (feof(file))
+            break;
+
+        buff[idx++] = c;
+    }
+    fclose(file);
+
+    inlen = strlen(buff);
+
+    rm_scanner scanner = {0, 0, inlen, std::string(buff)};
+    rm_srules rm_sr = {_numeric, _identifier, _comment, _punctuation, _literal};
+
+    scan_tokens(&scanner, toks, rm_sr);
+
+    return 0;
+}
 
 #endif // rm

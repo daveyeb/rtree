@@ -62,11 +62,11 @@ typedef struct parser
 
 typedef struct srules
 {
-    int (*_numeric)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (*_identifier)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (*_comment)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (*_punctuation)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (*_literal)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (&_numeric)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (&_identifier)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (&_comment)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (&_punctuation)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (&_literal)(rm_scanner *p, std::vector<rm_token> tokens);
 } rm_srules;
 
 typedef struct statement
@@ -133,7 +133,7 @@ int istokeq(token a, token b)
 }
 
 int strcont(std::string a, std::string b){
-    return (a.find(b) == std::string::npos);
+    return (a.find(b) != std::string::npos);
 }
 
 #endif // rm_utils
