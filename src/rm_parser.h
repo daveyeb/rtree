@@ -27,7 +27,7 @@ int rm_ppeek(rm_parser *parser, std::vector<token> &result, int npos)
     index = 0;
     while (index < npos)
     {
-        result->push_back(parser->tbuffer[curr++]);
+        result.push_back(parser->tbuffer[curr++]);
         index++;
     }
 

@@ -5,6 +5,8 @@
 #include <vector>
 #include <ctype.h>
 
+#include "tinydir/tinydir.h"
+
 typedef enum types
 {
     // keywords.
@@ -46,11 +48,15 @@ typedef struct token
 
 typedef struct scanner
 {
+    //indices.
     unsigned int start;
     unsigned int current;
     unsigned int length;
+    //buffer.
     std::string sbuffer;
-} rm_scanner;
+    //src. files.
+    std::vector<rm_srcfile> srcfiles;
+} rm_scanner ;
 
 typedef struct parser
 {
@@ -82,6 +88,13 @@ typedef struct prules
     int (*_java)(rm_parser *p, std::vector<rm_statement> statement);
 } rm_prules;
 
+typedef struct srcfile
+{
+    std::wstring ext;
+    std::wstring name;
+    std::wstring path;
+} rm_srcfile;
+
 int isbi(int c);
 int isalnd(int c);
 int issdq(int c);
@@ -91,6 +104,8 @@ int isbihexl(int c);
 int strcont(std::string a, std::string b);
 
 int istokeq(token a, token b);
+
+int rm_open_dir(const std::wstring dirname, std::vector<rm_srcfile> &srcfiles);
 
 int isbi(int c)
 {
@@ -132,8 +147,46 @@ int istokeq(token a, token b)
     return result;
 }
 
-int strcont(std::string a, std::string b){
+int strcont(std::string a, std::string b)
+{
     return (a.find(b) != std::string::npos);
+}
+
+int rm_open_dir(const std::wstring dirname, std::vector<rm_srcfile> &srcfiles)
+{
+    tinydir_dir dir;
+    tinydir_file file;
+
+    rm_srcfile tsrcfile;
+
+    if (dirname.length() == 0)
+        return 1;
+
+    tinydir_open(&dir, dirname.c_str());
+
+    while (dir.has_next)
+    {
+
+        tinydir_readfile(&dir, &file);
+
+        if (file.is_dir)
+        {
+            tinydir_next(&dir);
+            continue;
+        }
+
+        tsrcfile.ext += file.extension;
+        tsrcfile.name += file.name;
+        tsrcfile.path += file.path;
+
+        tinydir_next(&dir);
+    }
+
+    tinydir_close(&dir);
+
+    // TODO: test read files on permission restrictions
+
+    return 0;
 }
 
 #endif // rm_utils

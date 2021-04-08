@@ -34,30 +34,33 @@ static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> tokens,
 int main()
 {
 
-    int idx;
-    int c;
-    unsigned int inlen;
-    FILE *file;
-    char buff[4906] = {0};
+    // int idx;
+    // int c;
+    // unsigned int inlen;
+    // FILE *file;
+    // char buff[4906] = {0};
     std::vector<token> toks;
+    std::vector<rm_srcfile> srfls;
 
-    file = fopen("input", "r");
+    // file = fopen("input", "r");
 
-    idx = 0;
-    while (1)
-    {
-        idx = fgetc(file);
+    // idx = 0;
+    // while (1)
+    // {
+    //     idx = fgetc(file);
 
-        if (feof(file))
-            break;
+    //     if (feof(file))
+    //         break;
 
-        buff[idx++] = c;
-    }
-    fclose(file);
+    //     buff[idx++] = c;
+    // }
+    // fclose(file);
 
-    inlen = strlen(buff);
+    // inlen = strlen(buff);
 
-    rm_scanner scanner = {0, 0, inlen, std::string(buff)};
+    rm_open_dir(L"../src", srfls);
+
+    rm_scanner scanner = {.srcfiles = srfls};
     rm_srules rm_sr = {_numeric, _identifier, _comment, _punctuation, _literal};
 
     scan_tokens(&scanner, toks, rm_sr);
