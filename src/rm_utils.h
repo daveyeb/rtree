@@ -133,7 +133,7 @@ int istokeq(token a, token b)
 }
 
 int strcont(std::string a, std::string b){
-    return (a.find(b) == std::string::npos);
+    return (a.find(b) != std::string::npos);
 }
 
 #endif // rm_utils
