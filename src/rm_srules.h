@@ -16,6 +16,8 @@ int _numeric(rm_scanner *scanner, std::vector<token> tokens)
     int tcnt;
     int pcnt;
 
+    printf("inside numeric\n");
+
     int status;
     int (*rm_func)(int c);
 
@@ -130,6 +132,8 @@ int _literal(rm_scanner *scanner, std::vector<token> tokens)
 
     std::string tbuff;
 
+    printf("inside literal\n");
+
     rm_token token;
 
     while (scanner == NULL)
@@ -182,6 +186,8 @@ int _punctuation(rm_scanner *scanner, std::vector<token> tokens)
     int pcnt;
 
     int status;
+
+    printf("inside punct\n");
 
     std::string tbuff;
     std::string pbuff;
@@ -338,6 +344,8 @@ int _identifier(rm_scanner *scanner, std::vector<token> tokens)
 
     int index;
 
+    printf("inside identifier\n");
+
     std::string tbuff;
     std::string ltbuff;
 
@@ -366,7 +374,7 @@ int _identifier(rm_scanner *scanner, std::vector<token> tokens)
     index = 0;
     while (index < tbuff.length())
     {
-        ltbuff += tolower(tbuff[index]);
+        ltbuff += tolower(tbuff[index++]);
     }
 
     //comparing
@@ -388,6 +396,8 @@ int _comment(rm_scanner *scanner, std::vector<token> tokens)
 
     if (scanner == NULL)
         return 1;
+
+    printf("inside comment\n");
 
     curr = 0;
     status = 0;

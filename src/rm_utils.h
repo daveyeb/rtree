@@ -45,7 +45,6 @@ typedef struct srcfile
     std::string ext;
     std::string name;
     std::string path;
-    int is_dir;
 } rm_srcfile;
 
 typedef struct token
@@ -175,16 +174,18 @@ int rm_open_dir(const std::string dirname, std::vector<rm_srcfile> &srcfiles)
 
         tinydir_readfile(&dir, &file);
 
-        tsrcfile.is_dir = (file.is_dir) ? 1 : 0;
+        if (file.is_dir)
+        {
+            if (!strcont("..", std::string(file.name)))
+                rm_open_dir(std::string(file.path), srcfiles);
+
+            tinydir_next(&dir);
+            continue;
+        }
+
         tsrcfile.ext = file.extension;
         tsrcfile.name = file.name;
         tsrcfile.path = file.path;
-
-        if(file.is_dir){
-            rm_open_dir(file.path, srcfiles);
-            // tinydir_next(&dir);
-            continue;
-        }
 
         srcfiles.push_back(tsrcfile);
 
@@ -198,5 +199,34 @@ int rm_open_dir(const std::string dirname, std::vector<rm_srcfile> &srcfiles)
     return 0;
 }
 
+int rm_read_file(rm_srcfile file, std::string &buffer)
+{
+    int index;
+    int ch;
+
+    FILE *fptr;
+
+    fptr = fopen(file.path.c_str(), "r");
+
+    if (fptr == NULL)
+    {
+        printf("here");
+        return 1;
+    }
+
+    while (1)
+    {
+        ch = fgetc(fptr);
+
+        if (feof(fptr))
+            break;
+
+        buffer += ch;
+    }
+
+    fclose(fptr);
+
+    return 0;
+}
 
 #endif // rm_utils

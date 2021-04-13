@@ -27,25 +27,27 @@ static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> tokens,
 
         printf("file --> %s\n", scanner->srcfiles.at(index).path.c_str());
 
-        // std::ifstream ifs(scanner->srcfiles.at(index).path);
+        rm_read_file(scanner->srcfiles.at(index), scanner->sbuffer);
 
-        // scanner->sbuffer = std::string((std::istreambuf_iterator<char>(ifs)),
-        //                                (std::istreambuf_iterator<char>()));
-        // scanner->length = scanner->sbuffer.length();
+        scanner->length = scanner->sbuffer.length();
 
-        // while (scanner->current < scanner->length)
-        // {
-        //     rules._numeric(scanner, tokens);
-        //     rules._identifier(scanner, tokens);
-        //     rules._comment(scanner, tokens);
-        //     rules._punctuation(scanner, tokens);
-        //     rules._literal(scanner, tokens);
+        printf("sbuffer --> %s %d\n\n\n", scanner->sbuffer.c_str(), scanner->length);
 
-        //     // skip whitespaces and already consumed characters
-        //     rm_snextc(scanner, adch);
-        // }
+        while (scanner->current < scanner->length)
+        {
+            rules._numeric(scanner, tokens);
+            rules._identifier(scanner, tokens);
+            rules._comment(scanner, tokens);
+            rules._punctuation(scanner, tokens);
+            rules._literal(scanner, tokens);
+
+            // skip whitespaces and already consumed characters
+            rm_snextc(scanner, adch);
+        }
+
 
         index++;
+
     }
 
     return 0;
@@ -62,10 +64,10 @@ int main()
 
     printf("did i get here \n");
 
-    rm_open_dir("/Users/thesun/repomap/src", srfls);
+    rm_open_dir("\\Users\\M40812\\Desktop\\repomap-robot\\src", srfls);
     scanner.srcfiles = srfls;
 
-    // scan_tokens(&scanner, toks, rm_sr);
+    scan_tokens(&scanner, toks, rm_sr);
 
     return 0;
 }
