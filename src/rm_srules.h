@@ -402,13 +402,20 @@ int _comment(rm_scanner *scanner, std::vector<token> tokens)
     curr = 0;
     status = 0;
 
+        
+
     rm_smatch(scanner, status, '/', 0);
     rm_scurrc(scanner, curr);
+
+
+    
+        printf("curr %c <---\n", curr);
+
 
     if (curr == '/' && status)
         while (curr != 0 && curr != '\n')
         {
-            rm_scurrc(scanner, curr);
+            rm_snextc(scanner, curr);
         }
 
     return 0;

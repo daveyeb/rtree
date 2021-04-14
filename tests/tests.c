@@ -1,9 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int main(){
-    int neg = !923408324;
+#define SUPPORTED_EXT {1, 2};
 
-    printf("%d", neg);
+int main()
+{
+    int safe[] = SUPPORTED_EXT;
+    //   printf(SUPPORTED_EXT);
 
+    for (int a = 0; a < sizeof(safe) / sizeof(int); a++)
+    {
+        printf("%d ", safe[a]);
+    }
+
+    return 0;
 }

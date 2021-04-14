@@ -35,7 +35,6 @@ static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> tokens,
 
         while (scanner->current < scanner->length)
         {
-            rules._numeric(scanner, tokens);
             rules._identifier(scanner, tokens);
             rules._comment(scanner, tokens);
             rules._punctuation(scanner, tokens);
@@ -43,10 +42,14 @@ static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> tokens,
 
             // skip whitespaces and already consumed characters
             rm_snextc(scanner, adch);
+
+            printf("idx curr %d len %d\n", scanner->current, scanner->length);
         }
 
 
         index++;
+
+        // if(index == 1) break;
 
     }
 
@@ -64,7 +67,7 @@ int main()
 
     printf("did i get here \n");
 
-    rm_open_dir("\\Users\\M40812\\Desktop\\repomap-robot\\src", srfls);
+    rm_open_dir("/Users/thesun/repomap", srfls);
     scanner.srcfiles = srfls;
 
     scan_tokens(&scanner, toks, rm_sr);

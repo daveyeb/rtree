@@ -5,6 +5,7 @@
 #include <vector>
 #include <ctype.h>
 #include <fstream>
+#include <map>
 
 #include "tinydir/tinydir.h"
 
@@ -39,6 +40,25 @@ typedef enum types
     NUMBER,
     LITERAL
 } rm_ttypes;
+
+/*
+    Supported extenstions;
+
+    1. Ruby
+    2. Java
+    3. C/C++
+    4. JavaScript
+    5. Python
+
+*/
+
+#define supported_ext                                                          \
+    {".rb",                                                                    \
+     ".java",                                                                  \
+     ".cpp", ".c", ".cc", ".cxx", ".inl", ".h", ".hh", ".hpp", ".hxx", ".inc", \
+     ".Swift",                                                                 \
+     ".js",                                                                    \
+     ".py"};
 
 typedef struct srcfile
 {
@@ -102,11 +122,11 @@ int issdq(int c);
 
 int isdecfll(int c);
 int isbihexl(int c);
+
 int strcont(std::string a, std::string b);
-
 int istokeq(token a, token b);
-
 int rm_open_dir(const std::wstring dirname, std::vector<rm_srcfile> &srcfiles);
+int rm_read_file(rm_srcfile file, std::string &buffer);
 
 int isbi(int c)
 {
@@ -115,7 +135,6 @@ int isbi(int c)
 
 int issdq(int c)
 {
-
     return (c == 34 || c == 39);
 }
 
@@ -155,10 +174,17 @@ int strcont(std::string a, std::string b)
 
 int rm_open_dir(const std::string dirname, std::vector<rm_srcfile> &srcfiles)
 {
+    int index;
+    int found;
+    std::map<std::string, int> ext_cache;
+    const char *sup_ext[] = supported_ext;
+
     tinydir_dir dir;
     tinydir_file file;
 
     rm_srcfile tsrcfile;
+
+    // TODO: Use a map to cache results
 
     if (dirname.length() == 0)
         return 1;
@@ -183,11 +209,54 @@ int rm_open_dir(const std::string dirname, std::vector<rm_srcfile> &srcfiles)
             continue;
         }
 
-        tsrcfile.ext = file.extension;
-        tsrcfile.name = file.name;
-        tsrcfile.path = file.path;
+        if (std::string(file.extension) == "")
+        {
+            tinydir_next(&dir);
+            continue;
+        }
 
-        srcfiles.push_back(tsrcfile);
+        if (ext_cache.find(std::string(".") + file.extension) == ext_cache.end())
+        {
+
+            for (index = 0; index < sizeof(sup_ext) / sizeof(char *); index++)
+            {
+                found = 0;
+
+                if (std::string(".") + file.extension == sup_ext[index])
+                {
+                    found = 1;
+
+                    ext_cache.insert(std::pair<std::string, int>(std::string(".") + file.extension, found));
+
+                    tsrcfile.ext = file.extension;
+                    tsrcfile.name = file.name;
+                    tsrcfile.path = file.path;
+
+                    srcfiles.push_back(tsrcfile);
+
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                ext_cache.insert(std::pair<std::string, int>(std::string(".") + file.extension, found));
+            }
+        }
+        else
+        {
+            if (!ext_cache.find(std::string(".") + file.extension)->second)
+            {
+                tinydir_next(&dir);
+                continue;
+            }
+
+            tsrcfile.ext = file.extension;
+            tsrcfile.name = file.name;
+            tsrcfile.path = file.path;
+
+            srcfiles.push_back(tsrcfile);
+        }
 
         tinydir_next(&dir);
     }
@@ -195,6 +264,7 @@ int rm_open_dir(const std::string dirname, std::vector<rm_srcfile> &srcfiles)
     tinydir_close(&dir);
 
     // TODO: test read files on permission restrictions
+    //     : maybe try passing map by reference for speed
 
     return 0;
 }
