@@ -7,7 +7,7 @@
 int _imports_java(rm_parser *parser, std::vector<rm_statement> statements);
 int _imports_ccpp(rm_parser *parser, std::vector<rm_statement> statements);
 int _imports_python(rm_parser *parser, std::vector<rm_statement> statements);
-int _imports_js(rm_parser *parser, std::vector<rm_statement> statements);
+int _js(rm_parser *parser, std::vector<rm_statement> &stmts);
 int _imports_ruby(rm_parser *parser, std::vector<rm_statement> statements);
 int _imports_swift(rm_parser *parser, std::vector<rm_statement> statements);
 
@@ -53,10 +53,10 @@ int _imports_java(rm_parser *parser, std::vector<rm_statement> statements)
 int _imports_ccpp(rm_parser *parser, std::vector<rm_statement> statements)
 {
     int pcnt;
-
     token tok;
-    std::vector<token> toks;
     rm_statement rms;
+
+    std::vector<token> toks;
 
     if (parser == NULL)
         return 1;
@@ -150,13 +150,13 @@ int _imports_python(rm_parser *parser, std::vector<rm_statement> statements)
     return 0;
 }
 
-int _imports_js(rm_parser *parser, std::vector<rm_statement> statements)
+int _js(rm_parser *parser, std::vector<rm_statement> &stmts)
 {
     int pcnt;
 
-    token tok;
+    rm_token tok;
+    rm_statement stmt;
     std::vector<token> toks;
-    rm_statement rms;
 
     if (parser == NULL)
         return 1;
@@ -165,31 +165,44 @@ int _imports_js(rm_parser *parser, std::vector<rm_statement> statements)
 
     rm_pcurrt(parser, tok);
 
-    if (tok.type == IMPORT)
-    {
-
-        rm_pnextt(parser, tok); // consume
-
-        if (tok.type != STRING)
-        {
-            while (tok.type != FROM)
-            {
-                rms.alias += tok.lexeme;
-                rm_pnextt(parser, tok); // consume
-            }
-
-            rm_pnextt(parser, tok); // consume from
-            rms.inc += tok.raw;
-        }
-        else
-            rms.inc += tok.lexeme;
-    }
-
-    // string manipulate before persist
+    if (tok.type != IMPORT)
+        return 1;
 
     rm_pnextt(parser, tok); // consume
 
-    statements.push_back(rms);
+    while (tok.type != SEMICOLON)
+    {
+
+        switch (tok.type)
+        {
+
+        case FROM:
+            rm_pnextt(parser, tok); // consume
+            stmt.inc += tok.lexeme;
+            break;
+        case OPARENS:
+            rm_pnextt(parser, tok); // consume
+            stmt.inc += tok.lexeme;
+            rm_pnextt(parser, tok); // consume stmts
+            break;
+
+        default:
+            break;
+        }
+
+        rm_ppeek(parser, toks, 1);
+        if (toks[0].type == SEMICOLON)
+        {
+            printf("sus %d %s %s\n", toks[0].type, tok.lexeme.c_str(), toks[1].lexeme.c_str());
+        }
+
+        rm_pnextt(parser, tok); // consume
+    }
+
+    rm_pnextt(parser, tok); // consume
+
+    printf("file includes %s \n", stmt.inc.c_str());
+    stmts.push_back(stmt);
 
     return 0;
 }

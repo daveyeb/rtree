@@ -17,17 +17,19 @@ int rm_ppeek(rm_parser *parser, std::vector<token> &result, int npos)
     if (parser == NULL)
         return 1;
 
-    blen = parser->tbuffer.size();
+    blen = parser->tokens.size();
     curr = parser->current;
 
     if ((curr + npos) >= blen)
         return 1;
 
+    result.clear();
+
     //copying
     index = 0;
     while (index < npos)
     {
-        result.push_back(parser->tbuffer[curr++]);
+        result.push_back(parser->tokens[++curr]);
         index++;
     }
 
@@ -44,9 +46,9 @@ int rm_pmatch(rm_parser *parser, int *result, token expected)
         return 1;
 
     *result = 0;
-    blen = parser->tbuffer.size();
+    blen = parser->tokens.size();
     curr = parser->current;
-    tok = parser->tbuffer[curr];
+    tok = parser->tokens[curr];
 
     if ((curr >= blen) || (!istokeq(tok, expected)))
         return 1;
@@ -65,11 +67,13 @@ int rm_pcurrt(rm_parser *parser, token &t)
     if (parser == NULL)
         return 1;
 
-    blen = parser->tbuffer.size();
+    blen = parser->tokens.size();
     curr = parser->current;
 
     if (curr < blen)
-        t = parser->tbuffer[curr];
+        t = parser->tokens[curr];
+
+    // printf("inside p curr %s\n", t.lexeme.c_str());
 
     return 0;
 }
@@ -82,11 +86,11 @@ int rm_pnextt(rm_parser *parser, token &t)
     if (parser == NULL)
         return 1;
 
-    blen = parser->tbuffer.size();
+    blen = parser->tokens.size();
     curr = parser->current;
 
     if (curr < blen)
-        t = parser->tbuffer[++curr];
+        t = parser->tokens[++curr];
 
     parser->current = curr;
 

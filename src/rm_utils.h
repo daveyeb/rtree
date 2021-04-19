@@ -20,8 +20,8 @@ typedef enum types
     REQUIRE,
     INCLUDE,
     // puncts.
-    OPARENS = 28,
-    CPARENS = 29,
+    OPARENS = 40,
+    CPARENS = 41,
     DQUOTES = 34,
     POUND = 35,
     SQUOTES = 39,
@@ -34,6 +34,7 @@ typedef enum types
     GTHAN = 62,
     OCBRACKS = 123,
     CCBRACKS = 125,
+    EQUALS = 61,
     PUNCT,
     // literals.
     STRING,
@@ -77,7 +78,6 @@ typedef struct token
 typedef struct scanner
 {
     //indices.
-    unsigned int start;
     unsigned int current;
     unsigned int length;
     //buffer.
@@ -88,19 +88,18 @@ typedef struct scanner
 
 typedef struct parser
 {
-    unsigned int start;
     unsigned int current;
-    unsigned int length;
-    std::vector<token> tbuffer;
+
+    std::vector<rm_token> tbuffer;
+    std::vector<rm_token> tokens;
 } rm_parser;
 
 typedef struct srules
 {
-    int (&_numeric)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (&_identifier)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (&_comment)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (&_punctuation)(rm_scanner *p, std::vector<rm_token> tokens);
-    int (&_literal)(rm_scanner *p, std::vector<rm_token> tokens);
+    int (&_identifier)(rm_scanner *p, std::vector<rm_token> &tokens);
+    int (&_comment)(rm_scanner *p, std::vector<rm_token> &tokens);
+    int (&_punctuation)(rm_scanner *p, std::vector<rm_token> &tokens);
+    int (&_literal)(rm_scanner *p, std::vector<rm_token> &tokens);
 } rm_srules;
 
 typedef struct statement
@@ -113,7 +112,7 @@ typedef struct statement
 
 typedef struct prules
 {
-    int (*_java)(rm_parser *p, std::vector<rm_statement> statement);
+    int (&_js)(rm_parser *p, std::vector<rm_statement> &statement);
 } rm_prules;
 
 int isbi(int c);
@@ -170,6 +169,11 @@ int istokeq(token a, token b)
 int strcont(std::string a, std::string b)
 {
     return (a.find(b) != std::string::npos);
+}
+
+int streq(std::string a, std::string b)
+{
+    return a.compare(b) == 0;
 }
 
 int rm_open_dir(const std::string dirname, std::vector<rm_srcfile> &srcfiles)

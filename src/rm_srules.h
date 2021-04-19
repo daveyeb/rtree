@@ -4,125 +4,12 @@
 #include "rm_utils.h"
 #include "rm_scanner.h"
 
-int _numeric(rm_scanner *scanner, std::vector<token> tokens);
-int _literal(rm_scanner *scanner, std::vector<token> tokens);
-int _punctuation(rm_scanner *scanner, std::vector<token> tokens);
-int _identifier(rm_scanner *scanner, std::vector<token> tokens);
-int _comment(rm_scanner *scanner, std::vector<token> tokens);
+int _literal(rm_scanner *scanner, std::vector<token> &tokens);
+int _punctuation(rm_scanner *scanner, std::vector<token> &tokens);
+int _identifier(rm_scanner *scanner, std::vector<token> &tokens);
+int _comment(rm_scanner *scanner, std::vector<token> &tokens);
 
-int _numeric(rm_scanner *scanner, std::vector<token> tokens)
-{
-    int curr;
-    int tcnt;
-    int pcnt;
-
-    printf("inside numeric\n");
-
-    int status;
-    int (*rm_func)(int c);
-
-    std::string tbuff;
-    std::string pbuff;
-
-    rm_token token;
-
-    if (scanner == NULL)
-        return 1;
-
-    curr = 0;
-    pcnt = 0;
-    tcnt = 0;
-
-    rm_scurrc(scanner, curr);
-
-    status = isdigit(curr);
-    if (status)
-    {
-        while (isdecfll(curr))
-        {
-            if (pcnt > 1)
-                break;
-            if (curr == '.')
-                ++pcnt;
-
-            tbuff.push_back(curr);
-            rm_snextc(scanner, curr);
-
-            if (curr == '_')
-                while (!rm_smatch(scanner, status, '_', 0))
-                    ;
-
-            rm_scurrc(scanner, curr);
-        }
-
-        if (isspace(curr))
-            goto persist;
-
-        if (pcnt >= 1 || !isbihexl(curr))
-            goto postfix;
-
-        if (tbuff.length() != 1 && tbuff[0] != 0)
-            goto postfix;
-
-        rm_func = (curr == 'x') ? &isxdigit : &isbi;
-
-        tbuff.push_back(curr);
-        rm_snextc(scanner, curr);
-
-        while (rm_func(curr))
-        {
-            tbuff.push_back(curr);
-            rm_snextc(scanner, curr);
-
-            if (curr == '_')
-                while (!rm_smatch(scanner, status, '_', 0))
-                    ;
-
-            rm_scurrc(scanner, curr);
-        }
-    }
-    else
-    {
-        rm_speek(scanner, pbuff, 1);
-
-        if (curr != '.' || !isdigit(pbuff[0]))
-            goto exit;
-
-        tbuff.push_back(curr);
-        rm_scurrc(scanner, curr);
-
-        while (isdigit(curr))
-        {
-            tbuff.push_back(curr);
-            rm_scurrc(scanner, curr);
-        }
-    }
-
-postfix:
-
-    pbuff.clear();
-    rm_speek(scanner, pbuff, 1);
-
-    if (pbuff[0] != 'f' || pbuff[0] != 'L')
-        goto persist;
-
-    tbuff.push_back(curr);
-
-persist:
-
-    token.type = NUMBER;
-    token.lexeme = tbuff;
-
-    printf("number --> %s\n", tbuff.c_str());
-
-    tokens.push_back(token);
-
-exit:
-
-    return 0;
-}
-
-int _literal(rm_scanner *scanner, std::vector<token> tokens)
+int _literal(rm_scanner *scanner, std::vector<token> &tokens)
 {
     int curr;
     int tcnt;
@@ -131,8 +18,6 @@ int _literal(rm_scanner *scanner, std::vector<token> tokens)
     int status;
 
     std::string tbuff;
-
-    printf("inside literal\n");
 
     rm_token token;
 
@@ -173,21 +58,19 @@ int _literal(rm_scanner *scanner, std::vector<token> tokens)
     token.raw += tbuff;
     token.raw += "\"";
 
-    printf("literal --> %s\n", tbuff.c_str());
+    // printf("literal --> %s\n", tbuff.c_str());
 
     tokens.push_back(token);
 
     return 0;
 }
 
-int _punctuation(rm_scanner *scanner, std::vector<token> tokens)
+int _punctuation(rm_scanner *scanner, std::vector<token> &tokens)
 {
     int curr;
     int pcnt;
 
     int status;
-
-    printf("inside punct\n");
 
     std::string tbuff;
     std::string pbuff;
@@ -274,9 +157,10 @@ int _punctuation(rm_scanner *scanner, std::vector<token> tokens)
         }
     }
 
-cat:
     if (tbuff.length() != 1)
         goto persist;
+
+persist:
 
     switch (tbuff[0])
     {
@@ -322,29 +206,28 @@ cat:
     case PERIOD:
         token.type = PERIOD;
         break;
+    case EQUALS:
+        token.type = EQUALS;
+        break;
     default:
         goto exit;
     }
 
-persist:
-
     token.lexeme += tbuff;
     tokens.push_back(token);
 
-    printf("punctuation --> %s\n", tbuff.c_str());
+    // printf("punctuation --> %s\n", tbuff.c_str());
 
 exit:
     return 0;
 }
 
-int _identifier(rm_scanner *scanner, std::vector<token> tokens)
+int _identifier(rm_scanner *scanner, std::vector<token> &tokens)
 {
     int curr;
     int tcnt;
 
     int index;
-
-    printf("inside identifier\n");
 
     std::string tbuff;
     std::string ltbuff;
@@ -377,11 +260,29 @@ int _identifier(rm_scanner *scanner, std::vector<token> tokens)
         ltbuff += tolower(tbuff[index++]);
     }
 
-    //comparing
+    if (streq(ltbuff, "from"))
+        token.type = FROM;
+
+    if (streq(ltbuff, "import"))
+        token.type = IMPORT;
+
+    if (streq(ltbuff, "as"))
+        token.type = AS;
+
+    if (streq(ltbuff, "use"))
+        token.type = USE;
+
+    if (streq(ltbuff, "load"))
+        token.type = LOAD;
+
+    if (streq(ltbuff, "require"))
+        token.type = REQUIRE;
+
+    if (streq(ltbuff, "include"))
+        token.type = INCLUDE;
 
     // add to tokens
-
-    printf("identifier --> %s\n", tbuff.c_str());
+    printf("identifier --> %d\n", token.type);
 
     token.lexeme += tbuff;
     tokens.push_back(token);
@@ -389,33 +290,40 @@ int _identifier(rm_scanner *scanner, std::vector<token> tokens)
     return 0;
 }
 
-int _comment(rm_scanner *scanner, std::vector<token> tokens)
+int _comment(rm_scanner *scanner, std::vector<token> &tokens)
 {
     int curr;
     int status;
 
+    std::string pch;
+
     if (scanner == NULL)
         return 1;
-
-    printf("inside comment\n");
 
     curr = 0;
     status = 0;
 
-        
-
     rm_smatch(scanner, status, '/', 0);
     rm_scurrc(scanner, curr);
-
-
-    
-        printf("curr %c <---\n", curr);
-
 
     if (curr == '/' && status)
         while (curr != 0 && curr != '\n')
         {
             rm_snextc(scanner, curr);
+        }
+
+    if (curr == '*' && status)
+        while (curr != 0)
+        {
+            rm_snextc(scanner, curr);
+            rm_speek(scanner, pch, 1);
+
+            if (curr == '*' && pch[0] == '/')
+            {
+                rm_snextc(scanner, curr);
+                rm_snextc(scanner, curr);
+                break;
+            }
         }
 
     return 0;

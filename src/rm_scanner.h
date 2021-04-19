@@ -3,12 +3,12 @@
 
 #include "rm_utils.h"
 
-int rm_speek(rm_scanner *scanner, std::string result, int npos);
+int rm_speek(rm_scanner *scanner, std::string &result, int npos);
 int rm_smatch(rm_scanner *scanner, int &result, char expected, int iscase);
 int rm_scurrc(rm_scanner *scanner, int &c);
 int rm_snextc(rm_scanner *scanner, int &c);
 
-int rm_speek(rm_scanner *scanner, std::string result, int npos)
+int rm_speek(rm_scanner *scanner, std::string &result, int npos)
 {
     int blen;
     int curr;
@@ -22,7 +22,7 @@ int rm_speek(rm_scanner *scanner, std::string result, int npos)
     if ((curr + npos) >= blen)
         return 1;
 
-    result = scanner->sbuffer.substr(curr, npos);
+    result = scanner->sbuffer.substr(++curr, npos);
 
     return 0;
 }
