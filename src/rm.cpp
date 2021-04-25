@@ -1,104 +1,34 @@
-#ifndef RM
-#define RM
+#include "rm_utils.hpp"
+#include "rm_scanner.hpp"
+#include "rm_parser.hpp"
 
-#include <stdio.h>
-#include <string.h>
-
-#include "rm_utils.h"
-#include "rm_srules.h"
-#include "rm_prules.h"
-
-static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> &tokens, rm_srules rules);
-static inline int scan_stmts(rm_parser *parser, std::vector<rm_statement> &stmts, rm_prules rules);
-
-static inline int scan_tokens(rm_scanner *scanner, std::vector<rm_token> &tokens, rm_srules rules)
-{
-    int adch;
-    int index;
-
-    if (scanner == NULL)
-        return 1;
-
-    index = 0;
-
-    while (index < scanner->srcfiles.size())
-    {
-        scanner->current = 0;
-        scanner->sbuffer.clear();
-
-        rm_read_file(scanner->srcfiles.at(index), scanner->sbuffer);
-        scanner->length = scanner->sbuffer.length();
-
-        while (scanner->current < scanner->length)
-        {
-            rules._identifier(scanner, tokens);
-            rules._comment(scanner, tokens);
-            rules._punctuation(scanner, tokens);
-            rules._literal(scanner, tokens);
-
-            // skip whitespaces and already consumed characters
-            rm_snextc(scanner, adch);
-        }
-
-        index++;
-    }
-
-    return 0;
-}
-
-static inline int scan_stmts(rm_parser *parser, std::vector<rm_statement> &stmts, rm_prules rules)
-{
-    rm_token adtok;
-    int index;
-
-    if (parser == NULL)
-        return 1;
-
-    index = 0;
-    parser->current = 0;
-
-    while (index < parser->tokens.size())
-    {
-        rules._js(parser, stmts);
-
-        index++;
-    }
-
-    return 0;
-}
+#include "specs/parser_specs.hpp"
+#include "specs/scanner_specs.hpp"
 
 int main()
 {
 
-    std::vector<rm_token> toks;
-    std::vector<rm_statement> stmts;
-    std::vector<rm_srcfile> srfls;
-    int index;
+    rm_s scanner;
+    rm_p parser;
 
-    rm_open_dir("/Users/thesun/repomap/tests", srfls);
+    rm_sts stmts;
 
-    rm_srules rm_sr = {_identifier, _comment, _punctuation, _literal};
-    rm_prules rm_pa = {_js};
-    rm_scanner scanner = {};
-    rm_parser parser = {};
+    rm_ss sspec =
+        {
+            _identifier,
+            _comment,
+            _punctuation,
+            _literal};
 
-    scanner.srcfiles = srfls;
-    scan_tokens(&scanner, toks, rm_sr);
+    rm_ps pspec =
+        {
+            _javascript
+        };
 
-    parser.tokens = toks;
-    scan_stmts(&parser, stmts, rm_pa);
+    rm_open_dir(rm_str("/Users/thesun/repomapp/"), scanner.files);
 
-    for (index = 0; index < stmts.size(); index++)
-    {
-        printf("statements %s\n", stmts[index].inc.c_str());
-    }
-
-    //  for(index =0; index < toks.size(); index++){
-
-    //     printf("toks lex %s\n", toks[index].lexeme.c_str());
-    // }
+    scan_tokens(&scanner, parser.tokens, sspec);
+    scan_statement(&parser, stmts, pspec);
 
     return 0;
 }
-
-#endif // rm
