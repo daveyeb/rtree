@@ -9,6 +9,7 @@ int _javascript(rm_p *parser, rm_sts &stmts)
     rm_ts toks;
     rm_st stmt;
 
+
     if (parser == NULL)
         return 1;
 
@@ -19,6 +20,7 @@ int _javascript(rm_p *parser, rm_sts &stmts)
 
     while (tok.type != SEMICOLON)
     {
+       
         rm_p_peek(parser, toks, 1);
         if (toks[0].type == SEMICOLON)
         {
@@ -45,8 +47,6 @@ int _javascript(rm_p *parser, rm_sts &stmts)
 
         rm_p_next(parser, tok);
     }
-
-    rm_p_next(parser, tok); // consume ;
 
     stmts.push_back(stmt);
 

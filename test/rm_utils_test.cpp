@@ -1,6 +1,4 @@
 #include "../src/rm_utils.hpp"
-
-
 void print_files(rm_sfs &files){
     int index;
 

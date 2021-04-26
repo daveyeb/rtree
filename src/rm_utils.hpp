@@ -73,7 +73,8 @@ typedef enum token_types
     CCBRACKS = 125,
     // literals
     LITERAL,
-    STRING
+    STRING,
+    ENDOFFILE,
 } rm_tt;
 
 typedef std::string rm_str;
@@ -339,7 +340,7 @@ int rm_s_curr(rm_s *scanner, int &c)
     current = scanner->current;
 
     if (current < length)
-        current = scanner->buffer[current];
+        c = scanner->buffer[current];
     else
         c = 0;
 

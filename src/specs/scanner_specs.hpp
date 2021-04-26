@@ -94,7 +94,7 @@ int _identifier(rm_s *scanner, rm_ts &toks)
     rm_str ltstr;
     rm_t tok;
 
-    char *ids[] =
+    const char *ids[] =
         {"from",
          "import",
          "use",
@@ -122,8 +122,17 @@ int _identifier(rm_s *scanner, rm_ts &toks)
     rm_tolower(ltstr);
 
     index = -1;
+
     while (!isseq(ids[index + 1], ltstr))
+    {
+
+        if ((index + 1) >= 5)
+        {
+            index = -1;
+            break;
+        }
         index++;
+    }
 
     if (index >= 0)
         tok.type = (rm_tt)++index;
