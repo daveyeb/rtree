@@ -3,12 +3,10 @@
 
 #include "../rm_utils.hpp"
 
-int _javascript(rm_p *parser, rm_sts &stmts)
+int _javascript(rm_p *parser, rm_st &stmt)
 {
     rm_t tok;
     rm_ts toks;
-    rm_st stmt;
-
 
     if (parser == NULL)
         return 1;
@@ -47,8 +45,6 @@ int _javascript(rm_p *parser, rm_sts &stmts)
 
         rm_p_next(parser, tok);
     }
-
-    stmts.push_back(stmt);
 
     return 0;
 }

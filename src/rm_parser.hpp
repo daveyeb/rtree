@@ -3,7 +3,7 @@
 
 #include "rm_utils.hpp"
 
-rm_func int scan_statement(rm_p *parser, rm_sts &stmts, rm_ps spec)
+rm_func int scan_statement(rm_p *parser, rm_st &stmt, rm_ps spec)
 {
     rm_t tok;
 
@@ -14,7 +14,7 @@ rm_func int scan_statement(rm_p *parser, rm_sts &stmts, rm_ps spec)
 
     while (parser->current < parser->tokens.size())
     {
-        spec._javascript(parser, stmts);
+        spec._javascript(parser, stmt);
         rm_p_next(parser, tok);
     }
 

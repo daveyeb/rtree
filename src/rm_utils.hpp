@@ -45,6 +45,17 @@
         i++;                  \
     }
 
+#define rm_fforeach(x)             \
+    {                              \
+        int i = 0;                 \
+        while (i < x.size()) \
+        {
+
+#define rm_fforend() \
+    i++;             \
+    }                \
+    }
+
 // types
 typedef enum token_types
 {
@@ -112,8 +123,6 @@ typedef struct scanner
     unsigned int current;
     //buffer
     rm_str buffer;
-    //files
-    rm_sfs files;
 } rm_s;
 
 typedef struct parser
@@ -136,7 +145,7 @@ typedef struct scan_spec
 
 typedef struct parse_spec
 {
-    int (&_javascript)(rm_p *p, rm_sts &st);
+    int (&_javascript)(rm_p *p, rm_st &st);
 } rm_ps;
 
 // rm_functions
