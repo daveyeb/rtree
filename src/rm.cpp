@@ -5,58 +5,63 @@
 #include "specs/parser_specs.hpp"
 #include "specs/scanner_specs.hpp"
 
+void printStmts(rm_sts &stmts)
+{
+    int index = 0;
+    while (index < stmts.size())
+    {
+        printf("%d file %s\n", index, stmts[index].file.c_str());
+
+        int i = 0;
+        while (i < stmts[index].imports.size())
+        {
+            printf("\t import %s \n", stmts[index].imports[i].c_str());
+            i++;
+        }
+
+        index++;
+    }
+}
+
 int main()
 {
-    int index;
 
-    rm_ts * tokens;
-    rm_str * file;
-    rm_str * buffer;
-    
     rm_s scanner;
     rm_p parser;
 
-    rm_sfs files;
-
     rm_st stmt;
     rm_sts stmts;
+    rm_sfs files;
 
     rm_ss sspec =
         {
             _identifier,
             _comment,
             _punctuation,
-            _literal
-        };
+            _literal};
 
     rm_ps pspec =
         {
-            _javascript
-        };
-    
-    file = &stmt.file;
-    buffer = &scanner.buffer;
-    tokens = &parser.tokens;
+            _javascript};
 
-    rm_open_dir(rm_str("/Users/thesun/repomapp"), files);
+    printf("here \n ");
+
+    rm_open_dir(rm_str("\\Users\\M40812\\Desktop\\webpack-4336fccbbda1e5fe8437a43a3fd8f730ced056b1"), files);
+
+    // rm_open_dir(rm_str("\\Users\\M40812\\root\\repomap-robot"), files);
 
     rm_fforeach(files);
-    
-    *file = files[i].path.c_str();
-    rm_read_file(files[i], *buffer);
-    scan_tokens(&scanner, *tokens, sspec);
+    printf("file %s\n\n", files[i].path.c_str());
+    stmt.file = files[i].path.c_str();
+    rm_read_file(files[i], scanner.buffer);
+    scan_tokens(&scanner, parser.tokens, sspec);
     scan_statement(&parser, stmt, pspec);
-    
+
     stmts.push_back(stmt);
 
     rm_fforend();
 
-    index = 0;
-    while (index < stmts.size())
-    {
-        printf("%d imports %s\n", index, stmts[index].imports[0].c_str());
-        index++;
-    }
+    printStmts(stmts);
 
     return 0;
 }

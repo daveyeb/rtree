@@ -381,6 +381,7 @@ int rm_s_next(rm_s *scanner, int &c)
         2. rm_p_curr()
         3. rm_p_peek()
         4. rm_p_next()
+        5. rm_p_prev()
 
 */
 
@@ -463,6 +464,22 @@ int rm_p_next(rm_p *parser, rm_t &tok){
 
     if(*current < size)
         tok = parser->tokens[++(*current)];
+
+    return 0;
+}
+
+int rm_p_prev(rm_p *parser, rm_t &tok){
+    int size;
+    int current;
+
+    if(parser == NULL)
+        return 1;
+
+    size = parser->tokens.size();
+    current = parser->current;
+
+    if(current < size)
+        tok = parser->tokens[--current];
 
     return 0;
 }
