@@ -11,11 +11,13 @@ void printStmts(rm_sts &stmts)
     while (index < stmts.size())
     {
         printf("%d file %s\n", index, stmts[index].file.c_str());
+        fflush(stdin);
 
         int i = 0;
         while (i < stmts[index].imports.size())
         {
             printf("\t import %s \n", stmts[index].imports[i].c_str());
+            fflush(stdin);
             i++;
         }
 
@@ -37,31 +39,39 @@ int main()
         {
             _identifier,
             _comment,
+            _regexp,
             _punctuation,
-            _literal};
+            _literal
+            };
 
     rm_ps pspec =
         {
             _javascript};
 
     printf("here \n ");
+    fflush(stdin);
 
-    rm_open_dir(rm_str("\\Users\\M40812\\Desktop\\webpack-4336fccbbda1e5fe8437a43a3fd8f730ced056b1"), files);
+    rm_open_dir(rm_str("\\Users\\M40812\\root\\repomap-robot\\test"), files);
 
-    // rm_open_dir(rm_str("\\Users\\M40812\\root\\repomap-robot"), files);
+    // rm_open_dir(rm_str("\\Users\\M40812\\Desktop\\freeCodeCamp-main"), files);
 
     rm_fforeach(files);
-    printf("file %s\n\n", files[i].path.c_str());
-    stmt.file = files[i].path.c_str();
-    rm_read_file(files[i], scanner.buffer);
+    printf("file %s\n\n", files.at(i).path.c_str());
+    fflush(stdin);
+    stmt.file = files.at(i).path.c_str();
+    rm_read_file(files.at(i), scanner.buffer);
     scan_tokens(&scanner, parser.tokens, sspec);
-    scan_statement(&parser, stmt, pspec);
+    // scan_statement(&parser, stmt, pspec);
 
     stmts.push_back(stmt);
-
+    
     rm_fforend();
 
+    
+
     printStmts(stmts);
+
+    printf("-->> done <---\n");
 
     return 0;
 }
