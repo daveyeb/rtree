@@ -138,7 +138,6 @@ typedef struct parser
 typedef struct scan_spec
 {
     int (&_identifier)(rm_s *s, rm_ts &t);
-    int (&_regexp)(rm_s *s);
     int (&_comment)(rm_s *s);
     int (&_punctuation)(rm_s *s, rm_ts &t);
     int (&_literal)(rm_s *s, rm_ts &t);
@@ -325,7 +324,7 @@ int rm_s_match(rm_s *scanner, int &result, char c)
     result = 0;
     length = scanner->buffer.length();
     current = scanner->current;
-    ch = scanner->buffer.at(current);
+    ch = scanner->buffer[current];
 
     if ((current >= length) || (ch != c))
         return 1;
@@ -350,7 +349,7 @@ int rm_s_curr(rm_s *scanner, int &c)
     current = scanner->current;
 
     if (current < length)
-        c = scanner->buffer.at(current);
+        c = scanner->buffer[current];
     else
         c = 0;
 
@@ -368,10 +367,10 @@ int rm_s_next(rm_s *scanner, int &c)
     length = scanner->buffer.length();
     current = &scanner->current;
 
-    ++(*current);
     
+    ++(*current);
     if (*current < length)
-        c = scanner->buffer.at(*current);
+        c = scanner->buffer[*current];
     else
         c = 0;
 
@@ -401,7 +400,7 @@ int rm_p_match(rm_p *parser, rm_tt tt, int &result)
     result = 0;
     size = parser->tokens.size();
     current = parser->current;
-    tok = parser->tokens.at(current);
+    tok = parser->tokens[current];
 
     if ((current >= size) || tok.type != tt)
         return 1;
@@ -424,7 +423,7 @@ int rm_p_curr(rm_p *parser, rm_t &tok)
     current = parser->current;
 
     if (current < size)
-        tok = parser->tokens.at(current);
+        tok = parser->tokens[current];
 
     return 0;
 }
@@ -448,7 +447,7 @@ int rm_p_peek(rm_p *parser, rm_ts &result, int npos)
     index = 0;
     while (index < npos)
     {
-        result.push_back(parser->tokens.at(++current));
+        result.push_back(parser->tokens[++current]);
         ++index;
     }
 
@@ -462,14 +461,13 @@ int rm_p_next(rm_p *parser, rm_t &tok){
     if(parser == NULL)
         return 1;
 
-
-
     size = parser->tokens.size();
     current = &parser->current;
 
     ++(*current);
+
     if(*current < size)
-        tok = parser->tokens.at(*current);
+        tok = parser->tokens[*current];
 
     return 0;
 }
@@ -484,8 +482,9 @@ int rm_p_prev(rm_p *parser, rm_t &tok){
     size = parser->tokens.size();
     current = parser->current;
 
-    if(current < size)
-        tok = parser->tokens.at(--current);
+    --current;
+    if(current < size && current < 0)
+        tok = parser->tokens[current];
 
     return 0;
 }

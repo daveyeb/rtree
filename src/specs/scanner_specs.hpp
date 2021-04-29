@@ -18,14 +18,11 @@ int _literal(rm_s *scanner, rm_ts &toks)
     current = 0;
 
     rm_s_curr(scanner, current);
-    printf("lite curr %c\n", current);
-    fflush(stdin);
 
     if (!issdq(current))
         return 1;
 
     qch = current;
-
     rm_s_next(scanner, current);
 
     while (current != qch)
@@ -69,16 +66,11 @@ int _punctuation(rm_s *scanner, rm_ts &toks)
         return 1;
 
     rm_s_curr(scanner, current);
-    printf("punct curr %c\n", current);
-    fflush(stdin);
 
     if (!ispunct(current))
         return 1;
 
     if (issdq(current))
-        return 1;
-
-    if (current == '/')
         return 1;
 
     if (!isscont(pts, rm_str(1, current)))
@@ -114,8 +106,6 @@ int _identifier(rm_s *scanner, rm_ts &toks)
         return 1;
 
     rm_s_curr(scanner, current);
-    printf("id curr %c\n", current);
-    fflush(stdin);
 
     if (!isalnd(current))
         return 1;
@@ -149,9 +139,6 @@ int _identifier(rm_s *scanner, rm_ts &toks)
 
     tok.lexeme += tstr;
 
-    printf("\tstr tok %s\n", tstr.c_str());
-    fflush(stdin);
-
     toks.push_back(tok);
 
     return 0;
@@ -160,30 +147,24 @@ int _identifier(rm_s *scanner, rm_ts &toks)
 int _comment(rm_s *scanner)
 {
     int current;
+    int status;
 
     rm_str pch;
 
     if (scanner == NULL)
         return 1;
 
-    rm_s_peek(scanner, pch, 2);
+    current = 0;
+    status = 0;
 
-    printf("comment curr %c\n", scanner->buffer[scanner->current]);
-    fflush(stdin);
+    rm_s_match(scanner, status, '/');
+    rm_s_curr(scanner, current);
 
-    if (pch[0] == '/' && pch[1] == '/')
-    {
-        rm_s_next(scanner, current);
-        rm_s_next(scanner, current);
+    if (current == '/' && status)
         while (current != 0 && current != '\n')
             rm_s_next(scanner, current);
-    }
 
-    if (pch[0] == '/' && pch[1] == '*')
-    {
-        rm_s_next(scanner, current);
-        rm_s_next(scanner, current);
-
+    if (current == '*' && status)
         while (current != 0)
         {
             rm_s_next(scanner, current);
@@ -196,36 +177,6 @@ int _comment(rm_s *scanner)
                 break;
             }
         }
-    }
-
-    return 0;
-}
-
-int _regexp(rm_s *scanner)
-{
-    int current;
-    int status;
-
-    if (scanner == NULL)
-        return 1;
-
-    current = 0;
-    status = 0;
-
-    rm_s_curr(scanner, current);
-
-    printf("reg curr %c\n", current);
-    fflush(stdin);
-
-    if (current != '/')
-        return 1;
-
-    rm_s_next(scanner, current);
-
-    while (current != '/')
-    {
-        rm_s_next(scanner, current);
-    }
 
     return 0;
 }

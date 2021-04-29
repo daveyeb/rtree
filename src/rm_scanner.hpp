@@ -16,9 +16,7 @@ rm_func int scan_tokens(rm_s *scanner, rm_ts &toks, rm_ss spec)
 
     while (scanner->current < scanner->buffer.length())
     {
-
         spec._identifier(scanner, toks);
-        spec._regexp(scanner);
         spec._comment(scanner);
         spec._punctuation(scanner, toks);
         spec._literal(scanner, toks);
