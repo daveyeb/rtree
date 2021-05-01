@@ -13,11 +13,10 @@ rm_func int scan_statement(rm_p *parser, rm_st &stmt, rm_ps spec)
     parser->current = 0;
     stmt.imports.clear();
 
+    int i =0;
     while (parser->current < parser->tokens.size())
     {
-        // printf("string %s\n", tok.lexeme.c_str());
         spec._javascript(parser, stmt);
-        rm_p_next(parser, tok);
     }
 
     return 0;

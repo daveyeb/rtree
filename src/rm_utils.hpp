@@ -13,10 +13,8 @@
 #define EXT                                                                    \
     {".rb",                                                                    \
      ".java",                                                                  \
-     ".cpp", ".c", ".cc", ".cxx", ".inl", ".h", ".hh", ".hpp", ".hxx", ".inc", \
      ".Swift",                                                                 \
-     ".js",                                                                    \
-     ".py"};
+     ".js"};
 
 // definitions
 #define rm_func static inline

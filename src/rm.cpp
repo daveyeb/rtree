@@ -44,11 +44,8 @@ int main()
         {
             _javascript};
 
-    printf("here \n ");
 
-    // rm_open_dir(rm_str("\\Users\\M40812\\Desktop\\webpack-4336fccbbda1e5fe8437a43a3fd8f730ced056b1"), files);
-
-    rm_open_dir(rm_str("C:\\Users\\M40812\\Desktop\\freeCodeCamp-main"), files);
+    rm_open_dir(rm_str("/Users/thesun/Downloads/vscode"), files);
 
     rm_fforeach(files);
     printf("file %s\n\n", files[i].path.c_str());
@@ -56,9 +53,7 @@ int main()
     rm_read_file(files[i], scanner.buffer);
     scan_tokens(&scanner, parser.tokens, sspec);
     scan_statement(&parser, stmt, pspec);
-
     stmts.push_back(stmt);
-
     rm_fforend();
 
     printStmts(stmts);
