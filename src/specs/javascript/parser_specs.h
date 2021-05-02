@@ -1,7 +1,9 @@
-#ifndef PARSER_SPECS
-#define PARSER_SPECS
+#ifndef PARSER_SPEC
+#define PARSER_SPEC
 
-#include "../rm_utils.hpp"
+#include "rm_string.h"
+#include "rm_types.h"
+#include "rm_utils.h"
 
 int _javascript(rm_p *parser, rm_st &stmt)
 {
@@ -20,32 +22,28 @@ int _javascript(rm_p *parser, rm_st &stmt)
     status = tok.type == IMPORT;
     status |= tok.type == REQUIRE;
 
-    if(tok.type == IMPORT)
+    if (tok.type == IMPORT)
         tch.type = SEMICOLON;
-    
-    if(tok.type == REQUIRE)
+
+    if (tok.type == REQUIRE)
         tch.type = CPARENS;
 
-    
-
-    if (!status){
+    if (!status)
+    {
         rm_p_next(parser, tok);
         return 1;
     }
-        
-    
+
     while (tok.type != tch.type)
     {
-        status = 0;
         rm_p_peek(parser, toks, 1);
         if (tok.type == STRING)
-            if(toks[0].type == tch.type)
+            if (toks[0].type == tch.type)
             {
                 stmt.imports.push_back(tok.lexeme);
                 rm_p_next(parser, tok);
                 break;
             }
-
 
         switch (tok.type)
         {
@@ -56,17 +54,12 @@ int _javascript(rm_p *parser, rm_st &stmt)
         case OPARENS:
             rm_p_next(parser, tok);
             stmt.imports.push_back(tok.lexeme);
-            status = 1;
             break;
 
         default:
             break;
         }
 
-        // if (status)
-        //     break;
-
-        
         rm_p_next(parser, tok);
     }
 
@@ -75,4 +68,4 @@ int _javascript(rm_p *parser, rm_st &stmt)
     return 0;
 }
 
-#endif // !PARSER_SPECS
+#endif // !PARSER_SPEC

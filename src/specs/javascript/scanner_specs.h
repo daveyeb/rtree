@@ -1,12 +1,13 @@
 #ifndef SCANNER_SPEC
 #define SCANNER_SPEC
 
-#include "../rm_utils.hpp"
+#include "rm_utils.h"
+#include "rm_types.h"
+#include "rm_string.h"
 
 int _literal(rm_s *scanner, rm_ts &toks)
 {
     int current;
-    int status;
     int qch;
 
     rm_str tstr;
@@ -63,7 +64,6 @@ int _literal(rm_s *scanner, rm_ts &toks)
 int _punctuation(rm_s *scanner, rm_ts &toks)
 {
     int current;
-    int status;
     int count;
 
     rm_str tstr;
@@ -108,7 +108,6 @@ int _punctuation(rm_s *scanner, rm_ts &toks)
 int _identifier(rm_s *scanner, rm_ts &toks)
 {
     int current;
-    int count;
     int index;
 
     rm_str tstr;
@@ -169,7 +168,6 @@ int _identifier(rm_s *scanner, rm_ts &toks)
 int _comment(rm_s *scanner)
 {
     int current;
-    int status;
     int sch;
 
     rm_str pch;
@@ -178,7 +176,6 @@ int _comment(rm_s *scanner)
         return 1;
 
     current = 0;
-    status = 0;
 
     rm_s_curr(scanner, current);
 

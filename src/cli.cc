@@ -1,9 +1,10 @@
-#include "rm_utils.hpp"
-#include "rm_scanner.hpp"
-#include "rm_parser.hpp"
+#include "rm_utils.h"
+#include "rm_scanner.h"
+#include "rm_parser.h"
+#include "rm_file_svc.h"
 
-#include "specs/parser_specs.hpp"
-#include "specs/scanner_specs.hpp"
+#include "parser_specs.h"
+#include "scanner_specs.h"
 
 void printStmts(rm_sts &stmts)
 {
@@ -43,7 +44,6 @@ int main()
     rm_ps pspec =
         {
             _javascript};
-
 
     rm_open_dir(rm_str("/Users/thesun/Downloads/vscode"), files);
 
