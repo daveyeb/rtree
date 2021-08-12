@@ -18,6 +18,8 @@ public:
     Token getCurrent();
     Token next();
 
+    size_t curr(){ return current; }
+
     std::vector<Token> peek(size_t n);
     std::set<std::string> scanDependencies();
 };

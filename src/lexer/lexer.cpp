@@ -1,6 +1,6 @@
 #include "lexer.h"
-#include "token.h"
-#include "semantics.h"
+#include "token/token.h"
+#include "semantics/semantics.h"
 
 Lexer::Lexer(const std::string in)
 {
@@ -56,11 +56,18 @@ std::vector<Token> Lexer::scanTokens()
 
     while (current < (buffer.length() - 1))
     {
-        identifier(this, tokens);
-        comment(this);
-        punctuation(this, tokens);
-        literal(this, tokens);
+        Semantics::identifier(this, tokens);
+        Semantics::comment(this);
+        Semantics::punctuation(this, tokens);
+        Semantics::literal(this, tokens);
     }
+
+#if LEXER
+    for (Token a : tokens)
+    {
+        std::cout << a.getLexeme() << std::endl;
+    }
+#endif
 
     return tokens;
 }

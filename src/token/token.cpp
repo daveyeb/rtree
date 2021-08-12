@@ -1,6 +1,6 @@
 #include "token.h"
 
-Token::Token(Type t, std::string l, std::string r = "")
+Token::Token(Type t, std::string l, std::string r)
 {
     type = t;
     lexeme = l;

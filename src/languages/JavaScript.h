@@ -5,6 +5,11 @@
 
 class Parser; 
 
-void _JavaScript(Parser *const p, std::set<std::string> &deps);
+class JavaScript
+{
+public:
+    static void parse(Parser *const p, std::set<std::string> &mods);
+};
+
 
 #endif

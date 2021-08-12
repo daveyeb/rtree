@@ -4,11 +4,15 @@
 #include "common.h"
 
 class Token;
-class Lexer; 
+class Lexer;
 
-void identifier(Lexer *const l, std::vector<Token> &tokens);
-void comment(Lexer *const l);
-void literal(Lexer *const l, std::vector<Token> &tokens);
-void punctuation(Lexer *const l, std::vector<Token> &tokens);
+class Semantics
+{
+public:
+    static void identifier(Lexer *const l, std::vector<Token> &tokens);
+    static void comment(Lexer *const l);
+    static void literal(Lexer *const l, std::vector<Token> &tokens);
+    static void punctuation(Lexer *const l, std::vector<Token> &tokens);
+};
 
 #endif

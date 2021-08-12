@@ -57,11 +57,12 @@ endif()
 
 
 add_subdirectory(src)
-add_subdirectory(libs)
+add_subdirectory(lib)
 
 file(GLOB_RECURSE HEADERS
     "src/**/*.h"
     "src/*.h"
+    "lib/tinydir/*.h"
 )
 
 file(GLOB_RECURSE SOURCES
@@ -73,16 +74,12 @@ include_directories(
     SYSTEM
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/lib/tinydir
 )
 
 set(EXE_NAME rtree)
 
-
-add_executable(EXE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/src/cli.cc)
-
-target_include_directories(rtree PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/specs/javascript)
-target_include_directories(rtree PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/utils)
-target_include_directories(rtree PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/tinydir)
+add_executable(${EXE_NAME} ${SOURCES})
 
 install(TARGETS ${EXE_NAME} RUNTIME DESTINATION bin)
 
@@ -90,7 +87,7 @@ include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_VERSION ${RELEASE_VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 
-if(${CMAKE_SYSTEM_NAME} Matches "Linux")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 set(CPACK_GENERATOR "DEB")
 set(CPACK_DEBIAN_DESCRIPTION "Tree command but for source repositories")
 set(CPACK_PACKAGE_CONTACT "daveyeb@gmail.com")

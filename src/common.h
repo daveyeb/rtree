@@ -4,8 +4,30 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <map>
 #include <cctype>
 #include <algorithm>
+#include <iostream>
+#include <stdio.h>
+#include <utility>
+#include <assert.h>
+
+
+#ifndef WINDOWS
+#include <direct.h>
+#include <io.h>
+#include <fcntl.h>
+#define CURRENT_PATH _getcwd
+#define STAT _stat
+#else 
+#include <unistd.h>
+#define CURRENT_PATH getcwd
+#define STAT stat
+#endif 
+
+#define FILER 0
+#define LEXER 0
+#define PARSER 0
 
 #define IS_EQ(x, y) \
     (std::string(x).compare(std::string(y)) == 0)
@@ -26,6 +48,12 @@
 #define IS_SDB(x) \
     (x == 34 || x == 39 || x == 96)
 
-// #define 
+#define STR_CON(x, y) \
+    (std::string(x).find(std::string(y)) != std::string::npos)
+
+#define FIND(v, x) \
+    (std::find(v.begin(), v.end(), x) != v.end())
+
+#define JS JavaScript::parse()
 
 #endif

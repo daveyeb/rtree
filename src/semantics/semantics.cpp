@@ -1,8 +1,8 @@
 #include "semantics.h"
-#include "lexer.h"
-#include "token.h"
+#include "lexer/lexer.h"
+#include "token/token.h"
 
-void identifier(Lexer *const l, std::vector<Token> &tokens)
+void Semantics::identifier(Lexer *const l, std::vector<Token> &tokens)
 {
     char ch;
     std::string buffer;
@@ -38,10 +38,10 @@ void identifier(Lexer *const l, std::vector<Token> &tokens)
     if (found > 5)
         tokens.push_back(Token(LITERAL, buffer));
     else
-        tokens.push_back(Token((Type)found, buffer));
+        tokens.push_back(Token((Type)(++found), buffer));
 }
 
-void comment(Lexer *const l)
+void Semantics::comment(Lexer *const l)
 {
     char ch, pch;
 
@@ -86,7 +86,7 @@ void comment(Lexer *const l)
     l->next();
 }
 
-void literal(Lexer *const l, std::vector<Token> &tokens)
+void Semantics::literal(Lexer *const l, std::vector<Token> &tokens)
 {
     char ch, qch;
     std::string buffer;
@@ -107,7 +107,7 @@ void literal(Lexer *const l, std::vector<Token> &tokens)
         if (ch == -1)
             break;
 
-        if ((qch == 39 || qch == 34) && ch == '\n'))
+        if ((qch == 39 || qch == 34) && ch == '\n')
             break;
 
         if (ch == 92)
@@ -122,15 +122,15 @@ void literal(Lexer *const l, std::vector<Token> &tokens)
         ch = l->next();
     }
 
-    tokens.push_back(Tokens(STRING,
+    tokens.push_back(Token(STRING,
                             buffer,
                             std::
                                 string("\"" + buffer + "\"")));
 
-    t->next()
+    l->next();
 }
 
-void punctuation(Lexer *const l, std::vector<Token> &tokens)
+void Semantics::punctuation(Lexer *const l, std::vector<Token> &tokens)
 {
     char ch, pch;
 
@@ -139,7 +139,7 @@ void punctuation(Lexer *const l, std::vector<Token> &tokens)
     ch = l->getCurrent();
 
     if (isspace(ch) || IS_CTRL(ch))
-        l->next()
+        l->next();
 
             if (!ispunct(ch) || IS_SDB(ch) || ch == '/') return;
 
