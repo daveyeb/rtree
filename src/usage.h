@@ -9,11 +9,9 @@ Usage:
     rtree [-b | --base]
     rtree [-d | --dependants]
 Commands:
-    full        Lists only full pathnames of imported files
-    base        Lists only basename of imported files  
+    full        Lists absolute paths of imported files
+    base        Lists basename of imported files  
     dependants  Lists only dependants 
-    level       Lists dependancy tree at a level/depth 
-    output      Outputs results to a file 
 Options:
     --version   Shows version.
 

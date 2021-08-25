@@ -28,9 +28,9 @@ Ensure you have [https://brew.sh](Homebrew) installed or use the same process as
     rtree [-b | --base]
     rtree [-d | --dependants]
 ## Commands:
-    -f,--full           Prints the full path prefix for each import/module 
-    -d,--directories    List directories only 
-    -b,--basename       List only basename
+    -f,--full           Prints the absolute paths of imports
+    -d,--directories    List dependants only 
+    -b,--basename       List all files with basename
 ## Options:
     -v,--version        Shows version. 
 
