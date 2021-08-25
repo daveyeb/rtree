@@ -1,12 +1,10 @@
-# rTree CLI 
+# r🌲 CLI 
+A Command line tool almost like the `tree` command that spits out a file dependency tree of a repository. This tool has only support for JavaScript projects at the moment.
 
-## For any pull request or contributions? Contact 
-
-1. [David Yeboah](mailto:daveyeb@gmail.com)
 
 ## Building 
 
-## Windows 
+### Windows 
 
 To build and install rtree CLI, run:
 
@@ -18,12 +16,6 @@ $ make
 
 ```
 $ make install 
-```
-
-If you want to put the result in a different location than `/usr/bin`
-
-```
-$ PREFIX=/opt/rtree make install 
 ```
 
 ### macOs 
