@@ -29,7 +29,7 @@ Ensure you have [https://brew.sh](Homebrew) installed or use the same process as
     rtree [-d | --dependants]
 ## Commands:
     -f,--full           Prints the absolute paths of imports
-    -d,--directories    List dependants only 
+    -d,--dependants     List dependants only 
     -b,--basename       List all files with basename
 ## Options:
     -v,--version        Shows version. 
