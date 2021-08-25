@@ -1,4 +1,4 @@
-# rTree CLI 
+# r🌲 CLI 
 
 ## Building 
 
