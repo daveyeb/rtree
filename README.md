@@ -1,12 +1,8 @@
 # rTree CLI 
 
-## For any pull request or contributions? Contact 
-
-1. [David Yeboah](mailto:daveyeb@gmail.com)
-
 ## Building 
 
-## Windows 
+### Windows 
 
 To build and install rtree CLI, run:
 
