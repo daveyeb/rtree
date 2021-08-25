@@ -65,12 +65,14 @@ file(GLOB_RECURSE HEADERS
     "src/*.h"
     "lib/tinydir/*.h"
     "lib/docopt/*.h"
+    "lib/termcolor/include/*.hpp"
 )
 
 file(GLOB_RECURSE SOURCES
     "src/**/*.cpp"
     "src/*.cpp"
     "lib/docopt/*.cpp"
+    "lib/termcolor/include/*.cpp"
 )
 
 include_directories(
