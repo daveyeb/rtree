@@ -6,14 +6,27 @@
 class Tree
 {
 private:
-    std::map<std::string, std::set<std::string>> t;
     static int files; 
     static int dependants;
+
+    static bool isOnlyDepedants;
+    static bool isFull;
+    static bool isBase;
+    static bool isOutput;
+
+    static std::string filename;
     
 public:
-    void insert(std::string file, std::set<std::string> dset);
-    static void print(std::string file, std::set<std::string> dset);
+    static void print(std::string file, std::set<std::string> dset, bool isEnd);
     static void summary();
+    static void toggleBase() { isBase = !isBase; }
+    static void toggleFull() { isFull = !isFull; }
+    static void toggleDependants() { isOnlyDepedants = !isOnlyDepedants; }
+    static void toggleOutput(std::string fname){
+        isOutput = !isOutput;
+        filename = fname;
+    }
+
 };
 
 #endif

@@ -21,7 +21,7 @@ public:
     size_t curr(){ return current; }
 
     std::vector<Token> peek(size_t n);
-    std::set<std::string> scanDependencies();
+    std::set<std::string> scanDependencies(lang spec);
 };
 
 

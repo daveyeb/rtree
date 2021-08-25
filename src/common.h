@@ -11,23 +11,23 @@
 #include <stdio.h>
 #include <utility>
 #include <assert.h>
+#include <typeinfo>
+#include <typeindex>
+#include <fstream>
 
-
-#ifndef WINDOWS
+#if (defined _MSC_VER || defined __MINGW32__)
 #include <direct.h>
 #include <io.h>
 #include <fcntl.h>
 #define CURRENT_PATH _getcwd
 #define STAT _stat
-#else 
+#else
 #include <unistd.h>
 #define CURRENT_PATH getcwd
 #define STAT stat
-#endif 
+#endif
 
-#define FILER 0
-#define LEXER 0
-#define PARSER 0
+class Parser;
 
 #define IS_EQ(x, y) \
     (std::string(x).compare(std::string(y)) == 0)
@@ -54,6 +54,6 @@
 #define FIND(v, x) \
     (std::find(v.begin(), v.end(), x) != v.end())
 
-#define JS JavaScript::parse()
+typedef void (*lang)(Parser *p, std::set<std::string> &deps);
 
 #endif

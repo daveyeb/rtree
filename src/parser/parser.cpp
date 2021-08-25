@@ -1,6 +1,5 @@
 #include "parser.h"
 #include "token/token.h"
-#include "languages/JavaScript.h"
 
 Parser::Parser(std::vector<Token> in)
 {
@@ -61,7 +60,7 @@ std::vector<Token> Parser::peek(size_t n)
     return buffer;
 }
 
-std::set<std::string> Parser::scanDependencies(){
+std::set<std::string> Parser::scanDependencies(lang spec){
     std::set<std::string> importNames;
 
     int size = tokens.size();
@@ -71,7 +70,7 @@ std::set<std::string> Parser::scanDependencies(){
         return importNames;
 
     while(current < (size - 1)){
-        JavaScript::parse(this, importNames);
+        spec(this, importNames);
     }
     
     return importNames;

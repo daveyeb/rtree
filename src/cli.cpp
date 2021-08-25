@@ -1,7 +1,20 @@
 #include "common.h"
 #include "exec/exec.h"
+#include "docopt.h"
+#include "termcolor.hpp"
+#include "usage.h"
+#include "version.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
-    return Exec::execute(argv);
+
+    std::string version = (std::string("\n rTree version: ") + VERSION +
+                           std::string("\nHackClimate LLC https:://hackclimate.io"));
+
+    docopt::docopt(USAGE,
+                   {argv + 1, argv + argc},
+                   true,
+                   version.c_str());
+
+    return Exec::execute(argc, argv);
 }

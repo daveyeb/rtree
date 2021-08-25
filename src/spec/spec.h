@@ -1,12 +1,12 @@
-#ifndef __RT__SEMANTICS__H__
-#define __RT__SEMANTICS__H__
+#ifndef __RT__SPEC__H__
+#define __RT__SPEC__H__
 
 #include "common.h"
 
 class Token;
 class Lexer;
 
-class Semantics
+class Spec
 {
 public:
     static void identifier(Lexer *const l, std::vector<Token> &tokens);

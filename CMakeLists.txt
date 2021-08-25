@@ -55,6 +55,7 @@ else()
     endif()
 endif()
 
+add_compile_definitions(ENVIRONMENT="production")
 
 add_subdirectory(src)
 add_subdirectory(lib)
@@ -63,11 +64,13 @@ file(GLOB_RECURSE HEADERS
     "src/**/*.h"
     "src/*.h"
     "lib/tinydir/*.h"
+    "lib/docopt/*.h"
 )
 
 file(GLOB_RECURSE SOURCES
     "src/**/*.cpp"
     "src/*.cpp"
+    "lib/docopt/*.cpp"
 )
 
 include_directories(
@@ -75,13 +78,15 @@ include_directories(
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/lib/tinydir
+    ${CMAKE_SOURCE_DIR}/lib/docopt
+    ${CMAKE_SOURCE_DIR}/lib/termcolor/include/termcolor
 )
 
 set(EXE_NAME rtree)
 
 add_executable(${EXE_NAME} ${SOURCES})
 
-install(TARGETS ${EXE_NAME} RUNTIME DESTINATION bin)
+install(TARGETS ${EXE_NAME} RUNTIME DESTINATION usr/bin)
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_PACKAGE_VERSION ${RELEASE_VERSION})

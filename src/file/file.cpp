@@ -1,13 +1,26 @@
 #include "file.h"
 #include "tinydir.h"
 
+#include "languages/JavaScript.h"
+
+
 const std::vector<std::string> FileService::extensions =
     {
         //{Java/Type}Script
         ".js",
         ".ts"};
 
-void FileService::readDir(const std::string dir, std::set<std::string> &readFiles)
+lang FileService::getLangType(std::string ext)
+{
+    lang res;
+
+    if (IS_EQ(ext, "js") || IS_EQ(ext, "ts"))
+        res = JavaScript::parse;
+
+    return res;
+}
+
+void FileService::readDir(const std::string dir, std::map<std::string, lang> &readFiles)
 {
     tinydir_dir t_dir;
     tinydir_file t_file;
@@ -42,7 +55,7 @@ void FileService::readDir(const std::string dir, std::set<std::string> &readFile
             continue;
         }
 
-        readFiles.insert(t_file.path);
+        readFiles.insert(std::make_pair(t_file.path, getLangType(extension)));
         tinydir_next(&t_dir);
     }
     tinydir_close(&t_dir);
@@ -58,10 +71,6 @@ std::string FileService::readFile(const std::string file)
     if (fptr == NULL)
         return buffer;
 
-#if FILER
-    std::cout << file << std::endl;
-#endif
-
     while (1)
     {
         ch = fgetc(fptr);
@@ -76,26 +85,26 @@ std::string FileService::readFile(const std::string file)
     return buffer;
 }
 
-std::pair<std::string, size_t> FileService::baseName(std::string path)
+std::pair<std::string, size_t> FileService::removePattern(std::string path, std::string pattern)
 {
-    size_t foundIndex, last, count = 0;
+    size_t foundIndex, last = 0, count = 0;
 
-    while ((foundIndex = path.find("../", last)) != std::string::npos)
+    while ((foundIndex = path.find(pattern, last)) != std::string::npos)
     {
         last = foundIndex + 1;
         count++;
     }
 
-    return std::make_pair(path.substr(last + 1, path.length()), count);
+    return std::make_pair(path.substr(last, path.length()), count);
 }
 
 std::string FileService::resolvePath(std::string parent, std::string path)
 {
-    size_t index, foundIndex, upCount;
+    size_t index = 0, foundIndex, upCount;
 
-    std::pair<std::string, size_t> baseNCnt = baseName(path);
+    std::pair<std::string, size_t> baseNCnt = removePattern(path, "../");
 
-    std::string bN = std::get<0>(baseNCnt);
+    std::string baseName = std::get<0>(baseNCnt);
     upCount = std::get<1>(baseNCnt);
 
     while (index <= upCount)
@@ -108,7 +117,9 @@ std::string FileService::resolvePath(std::string parent, std::string path)
         index++;
     }
 
-    return (parent + bN);
+    //TODO : concate extensions to find in all files if path had no ext
+
+    return (parent + baseName.substr(1));
 }
 
 std::string FileService::currentDir()

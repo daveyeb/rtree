@@ -19,23 +19,15 @@ void JavaScript::parse(Parser *const p, std::set<std::string> &mods)
         tt = C_PAREN;
         break;
     default:
-#if PARSER
-        std::cout << "here " << t.getLexeme() << "\n";
-#endif
         p->next();
         return;
     }
-#if PARSER
-    size_t tmp = p->curr();
-#endif
 
     while (1)
     {
-        
+
         if (IS_EQ(t.getLexeme(), ";"))
             break;
-
-
 
         if (IS_EQ(t.getLexeme(), ":"))
             break;
@@ -70,28 +62,16 @@ void JavaScript::parse(Parser *const p, std::set<std::string> &mods)
 
             tt = RT_EOF;
         }
-#if PARSER
-std::cout << "Here" << std::endl;
-#endif
         t = p->next();
 
         if (t.getType() == UNKNOWN)
             break;
-
-
 
         if (t.getType() == STRING)
         {
             mods.insert(t.getLexeme());
             break;
         }
-
-#if PARSER
-        std::cout << "b " << t.getLexeme() << "--\n";
-        assert (tmp != p->curr());
-        
-        tmp = p->curr();
-#endif
     }
     p->next();
 }

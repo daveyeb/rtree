@@ -6,7 +6,7 @@
 class Exec
 {
 public:
-    static int execute(char *argv[]);
+    static int execute(int argc, char *argv[]);
 };
 
 

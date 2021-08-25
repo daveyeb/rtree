@@ -1,4 +1,4 @@
-# rtree CLI 
+# rTree CLI 
 
 ## For any pull request or contributions? Contact 
 
@@ -6,9 +6,15 @@
 
 ## Building 
 
-### Linux 
+## Windows 
 
-To build and install rtree CLI, you can run: 
+To build and install rtree CLI, run:
+
+```
+$ make 
+```
+
+### Linux 
 
 ```
 $ make install 
@@ -25,18 +31,16 @@ $ PREFIX=/opt/rtree make install
 Ensure you have [https://brew.sh](Homebrew) installed or use the same process as Linux. 
 
 ## Usage 
-    rtree (setup|init|auth)...
-    rtree -f | --full
-    rtree -d | --directories 
-    rtree -L level | --level level
-    rtree -o filename | --output filename 
+    rtree
+    rtree [-f | --full]
+    rtree [-b | --base]
+    rtree [-d | --dependants]
 ## Commands:
     -f,--full           Prints the full path prefix for each import/module 
     -d,--directories    List directories only 
-    -l,--level          Max display depth of the directory tree 
-    -o,--output         Send output to filename 
+    -b,--basename       List only basename
 ## Options:
-    -V,--version        Shows version. 
+    -v,--version        Shows version. 
 
 --- 
 

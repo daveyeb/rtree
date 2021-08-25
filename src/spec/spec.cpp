@@ -1,8 +1,8 @@
-#include "semantics.h"
+#include "spec.h"
 #include "lexer/lexer.h"
 #include "token/token.h"
 
-void Semantics::identifier(Lexer *const l, std::vector<Token> &tokens)
+void Spec::identifier(Lexer *const l, std::vector<Token> &tokens)
 {
     char ch;
     std::string buffer;
@@ -41,7 +41,7 @@ void Semantics::identifier(Lexer *const l, std::vector<Token> &tokens)
         tokens.push_back(Token((Type)(++found), buffer));
 }
 
-void Semantics::comment(Lexer *const l)
+void Spec::comment(Lexer *const l)
 {
     char ch, pch;
 
@@ -86,7 +86,7 @@ void Semantics::comment(Lexer *const l)
     l->next();
 }
 
-void Semantics::literal(Lexer *const l, std::vector<Token> &tokens)
+void Spec::literal(Lexer *const l, std::vector<Token> &tokens)
 {
     char ch, qch;
     std::string buffer;
@@ -130,7 +130,7 @@ void Semantics::literal(Lexer *const l, std::vector<Token> &tokens)
     l->next();
 }
 
-void Semantics::punctuation(Lexer *const l, std::vector<Token> &tokens)
+void Spec::punctuation(Lexer *const l, std::vector<Token> &tokens)
 {
     char ch, pch;
 
