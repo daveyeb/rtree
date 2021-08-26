@@ -4,16 +4,9 @@ A command line tool almost like the `tree` command but spits out a file dependen
 
 ## Building 
 
-### Windows 
+### Windows & Linux  
 
 To build and install rtree CLI, run:
-
-```
-$ make 
-```
-
-### Linux 
-
 ```
 $ make install 
 ```
