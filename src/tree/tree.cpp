@@ -14,10 +14,10 @@ std::string Tree::filename = "";
 
 void Tree::print(std::string file, std::set<std::string> dset, bool isEnd)
 {
-    std::vector<std::wstring> innerPointers = {L"├───", L"│   "};
-    std::vector<std::wstring> outerPointers = {L"└───", L"    "};
+    std::vector<std::string> innerPointers = {"├───", "│   "};
+    std::vector<std::string> outerPointers = {"└───", "    "};
     std::set<std::string>::iterator sIt;
-    std::vector<std::wstring> pointers[2];
+    std::vector<std::string> pointers[2];
     std::string baseName;
 
 
@@ -49,7 +49,7 @@ void Tree::print(std::string file, std::set<std::string> dset, bool isEnd)
 
 #if (defined _MSC_VER || defined __MINGW32__)
     _setmode(_fileno(stdout), _O_WTEXT);
-    std::wcout << pointers[0][0];
+    std::cout << pointers[0][0];
     _setmode(_fileno(stdout), _O_TEXT);
 
     std::cout << baseName << std::endl;
@@ -64,7 +64,7 @@ void Tree::print(std::string file, std::set<std::string> dset, bool isEnd)
 
 #if (defined _MSC_VER || defined __MINGW32__)
         _setmode(_fileno(stdout), _O_WTEXT);
-        std::wcout << pointers[0][1] << pointers[1][0];
+        std::cout << pointers[0][1] << pointers[1][0];
         _setmode(_fileno(stdout), _O_TEXT);
 
         if (isFull)
