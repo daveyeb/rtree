@@ -52,8 +52,6 @@ else()
     endif()
 endif()
 
-add_compile_definitions(ENVIRONMENT="production")
-
 add_subdirectory(src)
 add_subdirectory(lib)
 
