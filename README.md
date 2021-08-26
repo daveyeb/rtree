@@ -15,7 +15,7 @@ $ make install
 
 Ensure you have [https://brew.sh](Homebrew) installed or use the same process as Linux. 
 
-## Usage 
+## Usage:
     rtree
     rtree [-f | --full]
     rtree [-b | --base]
@@ -28,8 +28,8 @@ Ensure you have [https://brew.sh](Homebrew) installed or use the same process as
 ## Options:
     -v,--version        Shows version 
 
---- 
-### Contribution
+
+## Contribute:
 Tell me how you feel about this. 
     - twitter.com/daveyeb
 
