@@ -29,7 +29,7 @@ Ensure you have [https://brew.sh](Homebrew) installed or use the same process as
     -v,--version        Shows version 
 
 --- 
-
+### Contribution
 Tell me how you feel about this. 
     - twitter.com/daveyeb
 
