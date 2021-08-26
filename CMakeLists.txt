@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-file(STRINGS "VERSION" RELEASE_VERSION)
-project(rtree VERSION ${RELEASE_VERSION})
+project(rtree)
 
 set(EXECUTABLE_OUTPUT_PATH "bin")
 set(BUILD_SHARED_LIBS NO)
@@ -91,7 +90,6 @@ add_executable(${EXE_NAME} ${SOURCES})
 install(TARGETS ${EXE_NAME} RUNTIME DESTINATION usr/bin)
 
 include(InstallRequiredSystemLibraries)
-set(CPACK_PACKAGE_VERSION ${RELEASE_VERSION})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
