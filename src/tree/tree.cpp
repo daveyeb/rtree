@@ -86,7 +86,7 @@ void Tree::print(std::string file, std::set<std::string> dset, bool isEnd)
         std::cout << *sIt << std::endl;
 
 #else
-        std::cout << pointers[0];
+        std::cout << pointers[0][1] << pointers[1][0];
 
         if (isFull)
         {
