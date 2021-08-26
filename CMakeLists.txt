@@ -5,8 +5,6 @@ project(rtree)
 set(EXECUTABLE_OUTPUT_PATH "bin")
 set(BUILD_SHARED_LIBS NO)
 
-option(COLLECT_FILES "Copy libraries to <build>/lib, binaries to <build>/bin, headers to <build>/include." ON)
-
 set(RUNTIME_OUTPUT_DIRECTORY "${PROCJECT_BINARY_DIR}/bin")
 set(LIBRARY_OUTPUT_DIRECTORY "${PROCJECT_BINARY_DIR}/lib")
 set(ARCHIVE_OUTPUT_DIRECTORY "${PROCJECT_BINARY_DIR}/lib")
@@ -64,14 +62,14 @@ file(GLOB_RECURSE HEADERS
     "src/*.h"
     "lib/tinydir/*.h"
     "lib/docopt/*.h"
-    "lib/termcolor/include/*.hpp"
+    "lib/termcolor/*.hpp"
 )
 
 file(GLOB_RECURSE SOURCES
     "src/**/*.cpp"
     "src/*.cpp"
     "lib/docopt/*.cpp"
-    "lib/termcolor/include/*.cpp"
+    "lib/termcolor/*.cpp"
 )
 
 include_directories(
@@ -80,7 +78,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/lib/tinydir
     ${CMAKE_SOURCE_DIR}/lib/docopt
-    ${CMAKE_SOURCE_DIR}/lib/termcolor/include/termcolor
+    ${CMAKE_SOURCE_DIR}/lib/termcolor
 )
 
 set(EXE_NAME rtree)
