@@ -30,7 +30,6 @@ Ensure you have [https://brew.sh](Homebrew) installed or use the same process as
 
 
 ## Contribute:
-Tell me how you feel about this. 
-    - twitter.com/daveyeb
+Any fixes, cleanup or new features are always appreciated.
 
 
