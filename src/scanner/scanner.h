@@ -1,18 +1,20 @@
 #ifndef __RT__SCANNER_H__
 #define __RT__SCANNER_H__
 
-template <typename T>
-class Scanner
+namespace RTToken
 {
-protected:
-    unsigned int current;
 
-public:
-    Scanner() {}
-    ~Scanner() {}
+    template <typename T>
+    class Scanner
+    {
+    public:
+        virtual T current() = 0;
+        virtual T next() = 0;
 
-    virtual T getCurrent() = 0;
-    virtual T next() = 0;
-};
+    protected:
+        unsigned int _current;
+    };
+
+}
 
 #endif

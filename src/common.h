@@ -14,46 +14,54 @@
 #include <typeinfo>
 #include <typeindex>
 #include <fstream>
+#include <memory>
 
 #if (defined _MSC_VER || defined __MINGW32__)
 #include <direct.h>
 #include <io.h>
 #include <fcntl.h>
-#define CURRENT_PATH _getcwd
-#define STAT _stat
+#define cwd _getcwd
+#define stat _stat
 #else
 #include <unistd.h>
-#define CURRENT_PATH getcwd
-#define STAT stat
+#define cwd getcwd
 #endif
 
-class Parser;
+int iseq(std::string x, std::string y)
+{
+    return x.compare(y) == 0;
+}
 
-#define IS_EQ(x, y) \
-    (std::string(x).compare(std::string(y)) == 0)
+// Modified isalnum
+int isalnum_mod(int x)
+{
+    return isalnum(x) || x == 95 || x == 36;
+}
 
-#define IS_ALNUM(x) \
-    (isalnum(x) || x == 95 || x == 36)
+int issdb(int x)
+{
+    return (x == 34 || x == 39 || x == 96);
+}
 
-#define TO_LOWER(x) (         \
-    {                         \
-        for (auto &ch : x)    \
-            ch = tolower(ch); \
-        x;                    \
-    })
+std::string lower(std::string x)
+{
+    std::string r = x;
+    std::transform(r.begin(), r.end(), r.begin(),
+                   [](unsigned char c)
+                   { return std::tolower(c); });
+    return r;
+}
 
-#define IS_CTRL(x) \
-    ((x <= 31) || (x == 127))
+int contains(std::string x, std::string y)
+{
+    return std::string(x).find(std::string(y)) != std::string::npos;
+}
 
-#define IS_SDB(x) \
-    (x == 34 || x == 39 || x == 96)
+int find(std::string v, std::string x)
+{
+    return std::find(v.begin(), v.end(), x) != v.end();
+}
 
-#define STR_CON(x, y) \
-    (std::string(x).find(std::string(y)) != std::string::npos)
-
-#define FIND(v, x) \
-    (std::find(v.begin(), v.end(), x) != v.end())
-
-typedef void (*lang)(Parser *p, std::set<std::string> &deps);
+// typedef void (*lang)(Parser *p, std::set<std::string> &deps);
 
 #endif

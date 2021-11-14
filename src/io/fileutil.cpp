@@ -1,16 +1,16 @@
-#include "file.h"
+#include "fileutil.h"
 #include "tinydir.h"
 
-#include "languages/JavaScript.h"
+#include "languages/javascript.h"
 
 
-const std::vector<std::string> FileService::extensions =
+const std::vector<std::string> FileUtil::extensions =
     {
         //{Java/Type}Script
         ".js",
         ".ts"};
 
-lang FileService::getLangType(std::string ext)
+lang FileUtil::getLangType(std::string ext)
 {
     lang res;
 
@@ -20,7 +20,7 @@ lang FileService::getLangType(std::string ext)
     return res;
 }
 
-void FileService::readDir(const std::string dir, std::map<std::string, lang> &readFiles)
+void FileUtil::readDir(const std::string dir, std::map<std::string, lang> &readFiles)
 {
     tinydir_dir t_dir;
     tinydir_file t_file;
@@ -61,7 +61,7 @@ void FileService::readDir(const std::string dir, std::map<std::string, lang> &re
     tinydir_close(&t_dir);
 }
 
-std::string FileService::readFile(const std::string file)
+std::string FileUtil::readFile(const std::string file)
 {
     std::string buffer;
     char ch;
@@ -85,7 +85,7 @@ std::string FileService::readFile(const std::string file)
     return buffer;
 }
 
-std::pair<std::string, size_t> FileService::removePattern(std::string path, std::string pattern)
+std::pair<std::string, size_t> FileUtil::removePattern(std::string path, std::string pattern)
 {
     size_t foundIndex, last = 0, count = 0;
 
@@ -98,7 +98,7 @@ std::pair<std::string, size_t> FileService::removePattern(std::string path, std:
     return std::make_pair(path.substr(last, path.length()), count);
 }
 
-std::string FileService::resolvePath(std::string parent, std::string path)
+std::string FileUtil::resolvePath(std::string parent, std::string path)
 {
     size_t index = 0, foundIndex, upCount;
 
@@ -122,11 +122,11 @@ std::string FileService::resolvePath(std::string parent, std::string path)
     return (parent + baseName.substr(1));
 }
 
-std::string FileService::currentDir()
+std::string FileUtil::currentDir()
 {
     char fileName[FILENAME_MAX];
 
-    CURRENT_PATH(fileName, FILENAME_MAX);
+    cwd(fileName, FILENAME_MAX);
 
     return std::string(fileName);
 }

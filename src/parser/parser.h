@@ -4,26 +4,28 @@
 #include "common.h"
 #include "scanner/scanner.h"
 
-class Token;
-
-class Parser : public Scanner<Token>
+namespace RTToken
 {
-private:
-    std::vector<Token> tokens;
 
-public:
-    Parser(std::vector<Token> t);
-    ~Parser();
+    class Token;
 
-    Token getCurrent();
-    Token next();
+    class Parser : public Scanner<Token>
+    {
 
-    size_t curr(){ return current; }
+    public:
+        Parser(std::vector<Token> t);
+        virtual ~Parser();
 
-    std::vector<Token> peek(size_t n);
-    std::set<std::string> scanDependencies(lang spec);
-};
+        Token current() const;
+        Token next();
 
+        std::vector<Token> peek(size_t n) const;
+        const std::set<std::string>& scanDependencies();
 
+    private:
+        std::vector<Token> _tokens;
+    };
+
+}
 
 #endif

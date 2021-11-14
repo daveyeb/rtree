@@ -4,26 +4,27 @@
 #include "common.h"
 #include "scanner/scanner.h"
 
-class Token; 
-
-class Lexer : public Scanner<char>
+namespace RTToken
 {
-private:
-    std::string buffer;
 
-public:
-    Lexer(const std::string in);
-    ~Lexer();
+    class Token;
 
-    char getCurrent();
-    char next();
+    class Lexer : public Scanner<char>
+    {
+    public:
+        Lexer(const std::string b);
+        virtual ~Lexer();
 
-    std::vector<Token> scanTokens();
-    std::string peek(size_t n);
-};
+        char current() const;
+        char next();
 
+        std::vector<Token>& scanTokens();
+        std::string peek(size_t n) const;
 
+    private:
+        std::string _buffer;
+    };
 
-
+} // namespace RTToken
 
 #endif
