@@ -8,7 +8,7 @@ namespace RTToken
     class Scanner
     {
     public:
-        virtual T current() = 0;
+        virtual T current() const = 0;
         virtual T next() = 0;
 
     protected:

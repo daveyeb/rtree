@@ -16,6 +16,12 @@
 #include <fstream>
 #include <memory>
 
+// external libs 
+#include "tinydir.h"
+
+// supported languages 
+#include "languages/JavaScript.h"
+
 #if (defined _MSC_VER || defined __MINGW32__)
 #include <direct.h>
 #include <io.h>
@@ -52,15 +58,26 @@ std::string lower(std::string x)
     return r;
 }
 
-int contains(std::string x, std::string y)
+int strcon(std::string x, std::string y)
 {
     return std::string(x).find(std::string(y)) != std::string::npos;
 }
 
-int find(std::string v, std::string x)
+template <typename T>
+int find(T v, std::string x)
 {
     return std::find(v.begin(), v.end(), x) != v.end();
 }
+
+std::string _cwd()
+{
+    char dir[FILENAME_MAX];
+    cwd(dir, FILENAME_MAX);
+    return std::string(dir);
+}
+
+std::string resolve(std::string parent, std::string dep);                           // resolve paths
+std::string stripPattern(std::string path, std::string pattern); // can do a better name
 
 // typedef void (*lang)(Parser *p, std::set<std::string> &deps);
 

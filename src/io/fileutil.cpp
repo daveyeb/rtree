@@ -1,132 +1,89 @@
 #include "fileutil.h"
-#include "tinydir.h"
 
-#include "languages/javascript.h"
-
-
-const std::vector<std::string> FileUtil::extensions =
-    {
-        //{Java/Type}Script
-        ".js",
-        ".ts"};
-
-lang FileUtil::getLangType(std::string ext)
+namespace RTToken
 {
-    lang res;
 
-    if (IS_EQ(ext, "js") || IS_EQ(ext, "ts"))
-        res = JavaScript::parse;
-
-    return res;
-}
-
-void FileUtil::readDir(const std::string dir, std::map<std::string, lang> &readFiles)
-{
-    tinydir_dir t_dir;
-    tinydir_file t_file;
-    std::string extension;
-
-    tinydir_open(&t_dir, dir.c_str());
-
-    while (t_dir.has_next)
+    FileUtil::FileUtil()
     {
+    }
 
-        tinydir_readfile(&t_dir, &t_file);
-        extension = t_file.extension;
+    FileUtil::~FileUtil()
+    {
+        _files.clear();
+        _chunks.clear();
+    }
 
-        if (t_file.is_dir)
+    void FileUtil::readCWD(const std::string dir = _cwd())
+    {
+        tinydir_dir td;
+        tinydir_file tf;
+        std::string ext;
+
+        tinydir_open(&td, dir.c_str());
+
+        while (td.has_next)
         {
-            if (!STR_CON("..", t_file.name))
-                readDir(std::string(t_file.path), readFiles);
+            tinydir_readfile(&td, &tf);
+            ext = tf.extension;
 
-            tinydir_next(&t_dir);
-            continue;
+            if (tf.is_dir)
+            {
+                if (!strcon("..", tf.name))
+                    readCWD(tf.path);
+
+                tinydir_next(&td);
+                continue;
+            }
+
+            if (ext.empty())
+            {
+                tinydir_next(&td);
+                continue;
+            }
+
+            if (!find(_exts, std::string("." + ext)))
+            {
+                tinydir_next(&td);
+                continue;
+            }
+
+            _files.push_back(tf);
+            tinydir_next(&td);
+        }
+        tinydir_close(&td);
+    }
+
+    std::map<rtFile, std::unique_ptr<SynAnalysis>> &FileUtil::chunks()
+    {
+        char ch;
+        std::string buffer;
+        FILE *fptr = nullptr;
+
+        for (auto &file : _files)
+        {
+            fptr = fopen(file.path, "r");
+
+            if (fptr == nullptr)
+                continue;
+
+            while (1)
+            {
+                ch = fgetc(fptr);
+
+                if (feof(fptr))
+                    break;
+
+                buffer += ch;
+            }
+
+            fclose(fptr);
+            fptr = nullptr;
+
+            //populating _chunks
+            _chunks.insert({{file.path, buffer}, _langType(file.extension)});
         }
 
-        if (std::string(extension).empty())
-        {
-            tinydir_next(&t_dir);
-            continue;
-        }
-
-        if (!FIND(extensions, std::string("." + extension)))
-        {
-            tinydir_next(&t_dir);
-            continue;
-        }
-
-        readFiles.insert(std::make_pair(t_file.path, getLangType(extension)));
-        tinydir_next(&t_dir);
-    }
-    tinydir_close(&t_dir);
-}
-
-std::string FileUtil::readFile(const std::string file)
-{
-    std::string buffer;
-    char ch;
-
-    FILE *fptr = fopen(file.c_str(), "r");
-
-    if (fptr == NULL)
-        return buffer;
-
-    while (1)
-    {
-        ch = fgetc(fptr);
-
-        if (feof(fptr))
-            break;
-
-        buffer += ch;
+        return _chunks;
     }
 
-    fclose(fptr);
-    return buffer;
-}
-
-std::pair<std::string, size_t> FileUtil::removePattern(std::string path, std::string pattern)
-{
-    size_t foundIndex, last = 0, count = 0;
-
-    while ((foundIndex = path.find(pattern, last)) != std::string::npos)
-    {
-        last = foundIndex + 1;
-        count++;
-    }
-
-    return std::make_pair(path.substr(last, path.length()), count);
-}
-
-std::string FileUtil::resolvePath(std::string parent, std::string path)
-{
-    size_t index = 0, foundIndex, upCount;
-
-    std::pair<std::string, size_t> baseNCnt = removePattern(path, "../");
-
-    std::string baseName = std::get<0>(baseNCnt);
-    upCount = std::get<1>(baseNCnt);
-
-    while (index <= upCount)
-    {
-        foundIndex = parent.find_last_of("/");
-
-        if (foundIndex != std::string::npos)
-            parent = parent.substr(0, foundIndex);
-
-        index++;
-    }
-
-    //TODO : concate extensions to find in all files if path had no ext
-
-    return (parent + baseName.substr(1));
-}
-
-std::string FileUtil::currentDir()
-{
-    char fileName[FILENAME_MAX];
-
-    cwd(fileName, FILENAME_MAX);
-
-    return std::string(fileName);
 }

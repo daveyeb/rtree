@@ -1,6 +1,6 @@
 #include "parser.h"
 #include "token/token.h"
-#include "languages/RTJavaScript.h"
+#include "languages/JavaScript.h"
 
 namespace RTToken
 {
@@ -66,10 +66,8 @@ namespace RTToken
 
     // Intends to add support for more languages
     // TODO: need to improve design here
-    const std::set<std::string>& Parser::scanDependencies()
+    const std::set<std::string> &Parser::scanDependencies(std::unique_ptr<SynAnalysis>& sa)
     {
-        RTJavaScript js;
-
         int size = _tokens.size();
 
         if (_tokens.empty())
@@ -77,10 +75,10 @@ namespace RTToken
 
         while (_current < (size - 1))
         {
-            js.parse(this);
+            sa->parse(this);
         }
 
-        return js.deps();
+        return sa->deps();
     }
 
 }

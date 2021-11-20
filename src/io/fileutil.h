@@ -4,20 +4,38 @@
 #include "common.h"
 #include "syntax/syn_analysis.h"
 
-
-class FileUtil
+namespace RTToken
 {
-private:
-    std::vector<std::string> extensions;
-    std::map<std::string, std::unique_ptr<SynAnalysis>> files;
 
-public:
-    void readDir(const std::string dir);
-    std::string readFile(const std::string file);
-    std::string resolvePath(std::string parent, std::string path);
-    std::pair<std::string, size_t> removePattern(std::string path, std::string pattern);
-    std::string currentDir();
-    // lang getLangType(std::string ext);
-};
+    struct rtFile
+    {
+        std::string name;
+        std::string content;
+    };
+
+    class FileUtil
+    {
+    private:
+        std::vector<tinydir_file> _files;
+        std::vector<std::string> _exts;
+
+        std::map<rtFile, std::unique_ptr<SynAnalysis>> _chunks;
+
+        std::unique_ptr<SynAnalysis> _langType(std::string ext)
+        {
+
+            if (iseq(ext, "js") || iseq(ext, "ts"))
+                return std::unique_ptr<RTJavaScript>();
+        }
+
+    public:
+        FileUtil();
+        virtual ~FileUtil();
+
+        void readCWD(const std::string dir = _cwd());
+        std::map<rtFile, std::unique_ptr<SynAnalysis>> &chunks(); // chunks w syntax to analyze w
+    };
+
+}
 
 #endif

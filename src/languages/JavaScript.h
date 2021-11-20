@@ -8,7 +8,7 @@ namespace RTToken
 {
     class Parser;
 
-    class RTJavaScript : SynAnalysis
+    class RTJavaScript : public SynAnalysis
     {
     public:
         RTJavaScript();

@@ -20,7 +20,7 @@ namespace RTToken
         Token next();
 
         std::vector<Token> peek(size_t n) const;
-        const std::set<std::string>& scanDependencies();
+        const std::set<std::string>& scanDependencies(std::unique_ptr<SynAnalysis>& sa);
 
     private:
         std::vector<Token> _tokens;

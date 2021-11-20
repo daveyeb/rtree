@@ -1,0 +1,62 @@
+[
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\lib\\docopt\\docopt.cpp.obj -c C:\\Users\\16464\\rtree\\lib\\docopt\\docopt.cpp",
+  "file": "C:/Users/16464/rtree/lib/docopt/docopt.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\cli.cpp.obj -c C:\\Users\\16464\\rtree\\src\\cli.cpp",
+  "file": "C:/Users/16464/rtree/src/cli.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\ds\\depgraph.cpp.obj -c C:\\Users\\16464\\rtree\\src\\ds\\depgraph.cpp",
+  "file": "C:/Users/16464/rtree/src/ds/depgraph.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\evaluator\\evaluator.cpp.obj -c C:\\Users\\16464\\rtree\\src\\evaluator\\evaluator.cpp",
+  "file": "C:/Users/16464/rtree/src/evaluator/evaluator.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\exec\\exec.cpp.obj -c C:\\Users\\16464\\rtree\\src\\exec\\exec.cpp",
+  "file": "C:/Users/16464/rtree/src/exec/exec.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\io\\fileutil.cpp.obj -c C:\\Users\\16464\\rtree\\src\\io\\fileutil.cpp",
+  "file": "C:/Users/16464/rtree/src/io/fileutil.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\languages\\JavaScript.cpp.obj -c C:\\Users\\16464\\rtree\\src\\languages\\JavaScript.cpp",
+  "file": "C:/Users/16464/rtree/src/languages/JavaScript.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\lexer\\lexer.cpp.obj -c C:\\Users\\16464\\rtree\\src\\lexer\\lexer.cpp",
+  "file": "C:/Users/16464/rtree/src/lexer/lexer.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\parser\\parser.cpp.obj -c C:\\Users\\16464\\rtree\\src\\parser\\parser.cpp",
+  "file": "C:/Users/16464/rtree/src/parser/parser.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\token\\token.cpp.obj -c C:\\Users\\16464\\rtree\\src\\token\\token.cpp",
+  "file": "C:/Users/16464/rtree/src/token/token.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\token\\unitests\\main.cpp.obj -c C:\\Users\\16464\\rtree\\src\\token\\unitests\\main.cpp",
+  "file": "C:/Users/16464/rtree/src/token/unitests/main.cpp"
+},
+{
+  "directory": "C:/Users/16464/rtree/build",
+  "command": "C:\\PROGRA~2\\MINGW-~1\\I686-8~1.0-P\\mingw32\\bin\\I686-W~2.EXE  @CMakeFiles/rtree.dir/includes_CXX.rsp -g -std=gnu++11 -o CMakeFiles\\rtree.dir\\src\\util\\tree\\tree.cpp.obj -c C:\\Users\\16464\\rtree\\src\\util\\tree\\tree.cpp",
+  "file": "C:/Users/16464/rtree/src/util/tree/tree.cpp"
+}
+]
