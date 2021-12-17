@@ -32,7 +32,7 @@ namespace RTToken
         FileUtil();
         virtual ~FileUtil();
 
-        void readCWD(const std::string dir = _cwd());
+        void readCWD(const std::string dir = rt_cwd());
         std::map<rtFile, std::unique_ptr<SynAnalysis>> &chunks(); // chunks w syntax to analyze w
     };
 

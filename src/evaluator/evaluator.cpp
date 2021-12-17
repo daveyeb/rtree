@@ -155,7 +155,7 @@ namespace RTToken
         if (!ispunct(ch) || issdb(ch) || ch == '/')
             return;
 
-        if (!contains(pts, std::string(1, ch)))
+        if (!strcon(pts, std::string(1, ch)))
             tokens.push_back(Token(SYMBOL, std::string(1, ch)));
         else
             tokens.push_back(Token((Type)ch, std::string(1, ch)));

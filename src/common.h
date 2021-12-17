@@ -16,10 +16,10 @@
 #include <fstream>
 #include <memory>
 
-// external libs 
+// external libs
 #include "tinydir.h"
 
-// supported languages 
+// supported languages
 #include "languages/JavaScript.h"
 
 #if (defined _MSC_VER || defined __MINGW32__)
@@ -69,16 +69,50 @@ int find(T v, std::string x)
     return std::find(v.begin(), v.end(), x) != v.end();
 }
 
-std::string _cwd()
+std::string rt_cwd()
 {
     char dir[FILENAME_MAX];
     cwd(dir, FILENAME_MAX);
     return std::string(dir);
 }
 
-std::string resolve(std::string parent, std::string dep);                           // resolve paths
-std::string stripPattern(std::string path, std::string pattern); // can do a better name
+std::pair<std::string, size_t> xPattern(std::string path, std::string pattern)
+{
 
-// typedef void (*lang)(Parser *p, std::set<std::string> &deps);
+    size_t findex, lfound = 0, count = 0; // first index, last found and count
+
+    while ((findex = path.find(pattern, lfound)) != std::string::npos)
+    {
+        lfound = findex + 1;
+        count++;
+    }
+
+    return {path.substr(lfound, path.length()), count};
+}
+
+std::string resolve(std::string parent, std::string dep)
+{
+    size_t i = 0, foundIndex, upArrCnt;
+
+    std::pair<std::string, size_t> baseCnt = xPattern(dep, "../");
+    std::string baseName = std::get<0>(baseCnt);
+    upArrCnt = std::get<1>(baseCnt);
+
+    while (i <= upArrCnt)
+    {
+        foundIndex = parent.find_last_of("/");
+
+        if (foundIndex != std::string::npos)
+            parent = parent.substr(0, foundIndex);
+
+        i++;
+    }
+
+    // TODO : concate extensions to find in all files if path had no ext
+
+    return (parent + baseName.substr(1));
+
+} // resolve paths
+
 
 #endif

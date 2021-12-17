@@ -13,7 +13,7 @@ namespace RTToken
         _chunks.clear();
     }
 
-    void FileUtil::readCWD(const std::string dir = _cwd())
+    void FileUtil::readCWD(const std::string dir = rt_cwd())
     {
         tinydir_dir td;
         tinydir_file tf;

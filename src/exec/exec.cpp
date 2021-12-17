@@ -99,7 +99,7 @@ namespace RTToken
             Lexer l(file.content); // load chunk into lexer 
             Parser p(l.scanTokens()); // load tokens into parser
             dg.addDep(file.name, p.scanDependencies(csa.second)); // insert parsed deps to graph
-
+            dg.summary();
         }
 
         return 1;

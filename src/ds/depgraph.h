@@ -9,15 +9,17 @@ namespace RTToken
     class DepGraph
     {
     private:
-        std::vector<std::vector<std::string>> l;
+        std::map<std::string, std::vector<std::string>> l;
         size_t _files;
-        size_t _dependants; 
+        size_t _dependants;
+        size_t _filesPrinted;
+
+        void _print(std::string parent, std::set<std::string> deps, bool isFullOrBase = false);
 
     public:
         DepGraph(size_t size);
         virtual ~DepGraph();
 
-        void print() const;
         void summary() const;
         void addDep(std::string parent, std::set<std::string> deps);
     };

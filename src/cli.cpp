@@ -5,6 +5,8 @@
 #include "usage.h"
 #include "version.h"
 
+using namespace RTToken;
+
 int main(int argc, char **argv)
 {
 
@@ -16,5 +18,5 @@ int main(int argc, char **argv)
                    true,
                    version.c_str());
 
-    return Exec::execute(argc, argv);
+    return Exec::run(argc, argv);
 }
