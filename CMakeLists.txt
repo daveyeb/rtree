@@ -48,7 +48,7 @@ else()
             set(CMAKE_CXX_FLAG "${CMAKE_CXX_FLAG} -std=c++0x")
         endif()
     else()
-        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a C++ compiler with C++ support.")
     endif()
 endif()
 

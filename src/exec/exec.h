@@ -3,11 +3,22 @@
 
 #include "common.h"
 
-class Exec
+namespace RTree
 {
-public:
-    static int execute(int argc, char *argv[]);
-};
 
+    typedef void (*option)(void);
+
+    class Exec
+    {
+    public:
+        static int run(int argc, char *argv[]);
+
+        Exec() {}
+        ~Exec() {}
+
+    private:
+        static std::string _option(std::string op);
+    };
+}
 
 #endif

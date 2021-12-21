@@ -1,20 +1,32 @@
 #include "token.h"
 
-Token::Token(Type t, std::string l, std::string r)
+namespace RTree
 {
-    type = t;
-    lexeme = l;
-    raw = r;
-}
 
-Token::~Token() {}
+    Token::Token(Type t, std::string l)
+    {
+        _type = t;
+        _lexeme = l;
 
-std::string Token::getLexeme()
-{
-    return lexeme;
-}
+        if (_type == STRING)
+            _raw = std::string("\"" + _lexeme + "\"");
+    }
 
-Type Token::getType()
-{
-    return type;
+    Token::~Token(){}
+
+    std::string Token::lexeme() const
+    {
+        return _lexeme;
+    }
+
+    std::string Token::raw() const
+    {
+        return _raw;
+    }
+
+    int Token::type() const
+    {
+        return _type;
+    }
+
 }

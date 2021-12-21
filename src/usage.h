@@ -6,7 +6,6 @@ R"(
 Usage:
     rtree
     rtree [-f | --full]
-    rtree [-b | --base]
     rtree [-d | --dependants]
 Commands:
     full        Lists absolute paths of imported files

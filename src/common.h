@@ -14,46 +14,106 @@
 #include <typeinfo>
 #include <typeindex>
 #include <fstream>
+#include <memory>
+
+// external libs
+#include "tinydir.h"
 
 #if (defined _MSC_VER || defined __MINGW32__)
 #include <direct.h>
 #include <io.h>
 #include <fcntl.h>
-#define CURRENT_PATH _getcwd
-#define STAT _stat
+#define cwd _getcwd
+#define stat _stat
 #else
 #include <unistd.h>
-#define CURRENT_PATH getcwd
-#define STAT stat
+#define cwd getcwd
 #endif
 
-class Parser;
+inline int iseq(std::string x, std::string y)
+{
+    return x.compare(y) == 0;
+}
 
-#define IS_EQ(x, y) \
-    (std::string(x).compare(std::string(y)) == 0)
+// Modified isalnum
+inline int isalnum_mod(int x)
+{
+    return isalnum(x) || x == 95 || x == 36;
+}
 
-#define IS_ALNUM(x) \
-    (isalnum(x) || x == 95 || x == 36)
+// Modified iscntrl
+inline int iscntrl_mod(int x){
+    return iscntrl(x) || (x <= 31) || (x == 127);
+}
 
-#define TO_LOWER(x) (         \
-    {                         \
-        for (auto &ch : x)    \
-            ch = tolower(ch); \
-        x;                    \
-    })
+inline int issdb(int x)
+{
+    return (x == 34 || x == 39 || x == 96);
+}
 
-#define IS_CTRL(x) \
-    ((x <= 31) || (x == 127))
+inline std::string lower(std::string x)
+{
+    std::string r = x;
+    std::transform(r.begin(), r.end(), r.begin(),
+                   [](unsigned char c)
+                   { return std::tolower(c); });
+    return r;
+}
 
-#define IS_SDB(x) \
-    (x == 34 || x == 39 || x == 96)
+inline int strcon(std::string x, std::string y)
+{
+    return std::string(x).find(std::string(y)) != std::string::npos;
+}
 
-#define STR_CON(x, y) \
-    (std::string(x).find(std::string(y)) != std::string::npos)
+template <typename T>
+inline int find(T v, std::string x)
+{
+    return std::find(v.begin(), v.end(), x) != v.end();
+}
 
-#define FIND(v, x) \
-    (std::find(v.begin(), v.end(), x) != v.end())
+inline std::string rt_cwd()
+{
+    char dir[FILENAME_MAX];
+    cwd(dir, FILENAME_MAX);
+    return std::string(dir);
+}
 
-typedef void (*lang)(Parser *p, std::set<std::string> &deps);
+inline std::pair<std::string, size_t> xPattern(std::string path, std::string pattern)
+{
+
+    size_t findex, lfound = 0, count = 0; // first index, last found and count
+
+    while ((findex = path.find(pattern, lfound)) != std::string::npos)
+    {
+        lfound = findex + 1;
+        count++;
+    }
+
+    return {path.substr(lfound, path.length()), count};
+}
+
+inline std::string resolve(std::string parent, std::string dep)
+{
+    size_t i = 0, foundIndex, upArrCnt;
+
+    std::pair<std::string, size_t> baseCnt = xPattern(dep, "../");
+    std::string baseName = std::get<0>(baseCnt);
+    upArrCnt = std::get<1>(baseCnt);
+
+    while (i <= upArrCnt)
+    {
+        foundIndex = parent.find_last_of("/");
+
+        if (foundIndex != std::string::npos)
+            parent = parent.substr(0, foundIndex);
+
+        i++;
+    }
+
+    // TODO : concate extensions to find in all files if path had no ext
+
+    return (parent + baseName.substr(1));
+
+} // resolve paths
 
 #endif

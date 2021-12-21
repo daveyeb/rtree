@@ -3,27 +3,31 @@
 
 #include "common.h"
 #include "scanner/scanner.h"
+#include "syntax/syn_analysis.h"
 
-class Token;
-
-class Parser : public Scanner<Token>
+namespace RTree
 {
-private:
-    std::vector<Token> tokens;
 
-public:
-    Parser(std::vector<Token> t);
-    ~Parser();
+    class Token;
 
-    Token getCurrent();
-    Token next();
+    class Parser : public Scanner<Token>
+    {
 
-    size_t curr(){ return current; }
+    public:
+        Parser(std::vector<Token> t);
+        virtual ~Parser();
 
-    std::vector<Token> peek(size_t n);
-    std::set<std::string> scanDependencies(lang spec);
-};
+        Token current() const;
+        Token next();
 
+        std::vector<Token> peek(size_t n) const;
+        std::set<std::string> scanDependencies(std::shared_ptr<SynAnalysis> sa);
 
+    private:
+        std::vector<Token> _tokens;
+        std::set<std::string> _deps;
+    };
+
+}
 
 #endif

@@ -1,67 +1,77 @@
 #include "lexer.h"
 #include "token/token.h"
-#include "spec/spec.h"
+#include "evaluator/evaluator.h"
 
-Lexer::Lexer(const std::string in)
+namespace RTree
 {
-    buffer = in;
-    current = 0;
-}
 
-Lexer::~Lexer()
-{
-}
-
-char Lexer::getCurrent()
-{
-    size_t size = buffer.length();
-    if (!(size - 1))
-        return -1;
-
-    if (!(current < size - 1))
-        return -1;
-
-    return buffer[current];
-}
-
-char Lexer::next()
-{
-    size_t size = buffer.length();
-    if (!size)
-        return -1;
-
-    if (!((current + 1) < size))
-        return -1;
-
-    return buffer[++current];
-}
-
-std::string Lexer::peek(size_t n)
-{
-    size_t size = buffer.length();
-    size_t tmp = current;
-
-    if ((current + n) >= size)
-        return std::string("");
-
-    return buffer.substr(++tmp, n).c_str();
-}
-
-std::vector<Token> Lexer::scanTokens()
-{
-    std::vector<Token> tokens;
-
-    if (buffer.empty())
-        return tokens;
-
-    while (current < (buffer.length() - 1))
+    Lexer::Lexer(const std::string b)
     {
-        Spec::identifier(this, tokens);
-        Spec::comment(this);
-        Spec::punctuation(this, tokens);
-        Spec::literal(this, tokens);
+        _buffer = b;
+        _current = 0;
     }
 
+    Lexer::~Lexer()
+    {
+    }
 
-    return tokens;
+    char Lexer::current() const
+    {
+        size_t size = _buffer.length();
+        if (!(size - 1))
+            return -1;
+
+        if (!(_current < size - 1))
+            return -1;
+
+        return _buffer[_current];
+    }
+
+    char Lexer::next()
+    {
+        size_t size = _buffer.length();
+        if (!size)
+            return -1;
+
+        if (!((_current + 1) < size))
+            return -1;
+
+        return _buffer[++_current];
+    }
+
+    std::string Lexer::peek(size_t n) const
+    {
+        size_t size = _buffer.length();
+        size_t tmp = _current;
+
+        if ((_current + n) >= size)
+            return std::string("");
+
+        return _buffer.substr(++tmp, n);
+    }
+
+    std::vector<Token>& Lexer::scanTokens()
+    {
+        Evaluator eval;
+
+        if (_buffer.empty())
+            return tokens;
+
+        // printf("Here Lexer 1\n");
+
+        while (_current < (_buffer.length() - 1))
+        {
+            // printf("%d %lu\n", _current, (_buffer.length() - 1));
+
+            eval.identifier(this, tokens);
+            eval.comment(this);
+            eval.punctuation(this, tokens);
+            eval.literal(this, tokens);
+        }
+
+        // printf("Here Lexer 2\n");
+
+        return tokens;
+    }
+
 }
