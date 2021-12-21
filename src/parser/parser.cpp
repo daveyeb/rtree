@@ -1,8 +1,7 @@
 #include "parser.h"
 #include "token/token.h"
-#include "languages/JavaScript.h"
 
-namespace RTToken
+namespace RTree
 {
 
     Parser::Parser(std::vector<Token> t)
@@ -66,19 +65,21 @@ namespace RTToken
 
     // Intends to add support for more languages
     // TODO: need to improve design here
-    const std::set<std::string> &Parser::scanDependencies(std::unique_ptr<SynAnalysis>& sa)
+    std::set<std::string> Parser::scanDependencies(std::shared_ptr<SynAnalysis> sa)
     {
         int size = _tokens.size();
 
-        if (_tokens.empty())
+        if (sa == nullptr || _tokens.empty()){
             return {};
+        }
+            
 
         while (_current < (size - 1))
         {
-            sa->parse(this);
+            sa->parse(this, _deps);
         }
-
-        return sa->deps();
+        
+        return _deps;
     }
 
 }

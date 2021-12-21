@@ -2,7 +2,7 @@
 #include "token/token.h"
 #include "evaluator/evaluator.h"
 
-namespace RTToken
+namespace RTree
 {
 
     Lexer::Lexer(const std::string b)
@@ -53,18 +53,23 @@ namespace RTToken
     std::vector<Token>& Lexer::scanTokens()
     {
         Evaluator eval;
-        std::vector<Token> tokens;
 
         if (_buffer.empty())
             return tokens;
 
+        // printf("Here Lexer 1\n");
+
         while (_current < (_buffer.length() - 1))
         {
+            // printf("%d %lu\n", _current, (_buffer.length() - 1));
+
             eval.identifier(this, tokens);
             eval.comment(this);
             eval.punctuation(this, tokens);
             eval.literal(this, tokens);
         }
+
+        // printf("Here Lexer 2\n");
 
         return tokens;
     }

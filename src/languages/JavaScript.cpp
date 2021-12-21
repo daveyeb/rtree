@@ -1,18 +1,18 @@
-#include "languages/javascript.h"
+#include "languages/Javascript.h"
 #include "parser/parser.h"
 #include "token/token.h"
 
-namespace RTToken
+namespace RTree
 {
     
     RTJavaScript::RTJavaScript(){}
     RTJavaScript::~RTJavaScript(){}
 
-    const std::set<std::string>& RTJavaScript::deps() const {
+    std::set<std::string> RTJavaScript::deps() const {
         return _deps;
     }
 
-    void RTJavaScript::parse(Parser *const p)
+    void RTJavaScript::parse(Parser *const p, std::set<std::string> &str)
     {
 
         std::vector<Token> buffer;
@@ -79,7 +79,7 @@ namespace RTToken
 
             if (t.type() == STRING)
             {
-                _deps.insert(t.lexeme());
+                str.insert(t.lexeme());
                 break;
             }
         }

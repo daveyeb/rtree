@@ -1,6 +1,6 @@
 #include "token.h"
 
-namespace RTToken
+namespace RTree
 {
 
     Token::Token(Type t, std::string l)

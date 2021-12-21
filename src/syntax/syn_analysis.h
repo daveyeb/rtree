@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-namespace RTToken
+namespace RTree
 {
 
     class Parser;
@@ -12,8 +12,8 @@ namespace RTToken
     {
 
     public:
-        virtual void parse(Parser *const p);
-        virtual const std::set<std::string>& deps() const = 0;
+        virtual void parse(Parser *const p, std::set<std::string> &str) = 0;
+        virtual std::set<std::string> deps() const = 0;
 
     protected:
         std::set<std::string> _deps;

@@ -2,7 +2,7 @@
 #include "lexer/lexer.h"
 #include "token/token.h"
 
-namespace RTToken
+namespace RTree
 {
 
     Evaluator::Evaluator()
@@ -27,7 +27,9 @@ namespace RTToken
 
         ch = l->current();
 
-        if (isspace(ch) || iscntrl(ch))
+        // printf("-- identifier %c \n", ch);
+
+        if (isspace(ch) || iscntrl_mod(ch))
             l->next();
 
         if (!isalnum_mod(ch))
@@ -64,7 +66,9 @@ namespace RTToken
         ch = l->current();
         pch = l->peek(1)[0];
 
-        if (isspace(ch) || iscntrl(ch))
+        // printf("-- comment %c \n", ch);
+
+        if (isspace(ch) || iscntrl_mod(ch))
             l->next();
 
         if (ch != '/')
@@ -107,9 +111,11 @@ namespace RTToken
         char ch, qch;
         std::string buffer;
 
+        // printf("-- literal %c \n", ch);
+
         ch = l->current();
 
-        if (isspace(ch) || iscntrl(ch))
+        if (isspace(ch) || iscntrl_mod(ch))
             l->next();
 
         if (!issdb(ch))
@@ -147,9 +153,11 @@ namespace RTToken
     {
         char ch, pch;
 
+        // printf("-- puntuation %d \n", ch); 
+
         ch = l->current();
 
-        if (isspace(ch) || iscntrl(ch))
+        if (isspace(ch) || iscntrl_mod(ch))
             l->next();
 
         if (!ispunct(ch) || issdb(ch) || ch == '/')

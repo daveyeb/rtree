@@ -1,106 +1,59 @@
-#include "exec.h"
+#include "exec/exec.h"
 #include "io/fileutil.h"
 #include "lexer/lexer.h"
 #include "parser/parser.h"
 #include "ds/depgraph.h"
 #include "token/token.h"
 
-// TODO : log all return if statements
 
-typedef void (*cmds)(void);
-
-struct FunctionCaller
+namespace RTree
 {
-    std::map<std::string, cmds> c;
 
-    template <typename T>
-    void insert(std::string name, T func)
+    std::string Exec::_option(std::string op)
     {
-        auto tt = std::type_index(typeid(func));
+        if (iseq(op, "-d"))
+            return "dependents";
+        else if (iseq(op, "-f"))
+            return "full";
 
-        c.insert(std::make_pair(name, (cmds)func));
+        return "";
     }
-
-    template <typename T, typename... Args>
-    T callFunction(std::string string_name, Args... args)
-    {
-        auto iter = c.find(string_name);
-        auto mapVal = iter->second;
-        auto typeCasted = (T(*)(Args...))(mapVal);
-
-        assert(iter != c.end());
-
-        return typeCasted(std::forward<Args>(args)...);
-    }
-};
-
-// void full()
-// {
-//     Tree::toggleFull();
-// }
-
-// void base()
-// {
-//     Tree::toggleBase();
-// }
-
-// void dependants()
-// {
-//     Tree::toggleDependants();
-// }
-
-// void output(int argc, char **argv)
-// {
-//     std::cout << argv[2] << "\n";
-
-//     std::string fn(argv[2]);
-
-//     Tree::toggleOutput(fn);
-// }
-
-// std::string getCmdType(std::string cmd)
-// {
-//     std::string res;
-
-//     if (IS_EQ(cmd, "-d"))
-//         res = "dependants";
-//     else if (IS_EQ(cmd, "-f"))
-//         res = "full";
-//     else if (IS_EQ(cmd, "-b"))
-//         res = "base";
-//     // else if (IS_EQ(cmd, "-o"))
-//     //     res = "output";
-
-//     if (res.empty())
-//         res = cmd.substr(2);
-
-//     return res;
-// }
-
-namespace RTToken
-{
 
     int Exec::run(int argc, char *argv[])
     {
+        std::string cmd;
+        std::vector<rtFile> files; // parsable files
+        FileUtil fileUtil;
 
-        std::map<rtFile, std::unique_ptr<SynAnalysis>> csas; // chunks w syn analysis
-        FileUtil fu;
-        DepGraph dg(csas.size());
+        if (argc >= 2)
+        {
+            cmd = std::string(argv[1]);
+            cmd = Exec::_option(cmd);
+
+            assert(!iseq("", cmd));
+        }
 
         // read current directory for files
-        fu.readCWD();
-        // get chunks
-        csas = fu.chunks();
+        fileUtil.readCWD();
+        files = fileUtil.files();
 
-        for (auto &csa: csas)
+        DepGraph depGraph(fileUtil.files().size());
+
+        if (iseq("full", cmd))
+            depGraph.setFull();
+
+        if (iseq("dependents", cmd))
+            depGraph.setDeps();
+
+        for (auto &file : files)
         {
-            rtFile file = csa.first;
-            
-            Lexer l(file.content); // load chunk into lexer 
-            Parser p(l.scanTokens()); // load tokens into parser
-            dg.addDep(file.name, p.scanDependencies(csa.second)); // insert parsed deps to graph
-            dg.summary();
+            Lexer lexer(file.chunk); // load chunk into lexer
+            Parser parser(lexer.scanTokens()); // load tokens into parser
+            depGraph.addDep(file.name, parser.scanDependencies(fileUtil.synAnalysis(file.ext))); // insert parsed deps to graph
+
         }
+
+        depGraph.summary();
 
         return 1;
     }

@@ -19,9 +19,6 @@
 // external libs
 #include "tinydir.h"
 
-// supported languages
-#include "languages/JavaScript.h"
-
 #if (defined _MSC_VER || defined __MINGW32__)
 #include <direct.h>
 #include <io.h>
@@ -33,23 +30,28 @@
 #define cwd getcwd
 #endif
 
-int iseq(std::string x, std::string y)
+inline int iseq(std::string x, std::string y)
 {
     return x.compare(y) == 0;
 }
 
 // Modified isalnum
-int isalnum_mod(int x)
+inline int isalnum_mod(int x)
 {
     return isalnum(x) || x == 95 || x == 36;
 }
 
-int issdb(int x)
+// Modified iscntrl
+inline int iscntrl_mod(int x){
+    return iscntrl(x) || (x <= 31) || (x == 127);
+}
+
+inline int issdb(int x)
 {
     return (x == 34 || x == 39 || x == 96);
 }
 
-std::string lower(std::string x)
+inline std::string lower(std::string x)
 {
     std::string r = x;
     std::transform(r.begin(), r.end(), r.begin(),
@@ -58,25 +60,25 @@ std::string lower(std::string x)
     return r;
 }
 
-int strcon(std::string x, std::string y)
+inline int strcon(std::string x, std::string y)
 {
     return std::string(x).find(std::string(y)) != std::string::npos;
 }
 
 template <typename T>
-int find(T v, std::string x)
+inline int find(T v, std::string x)
 {
     return std::find(v.begin(), v.end(), x) != v.end();
 }
 
-std::string rt_cwd()
+inline std::string rt_cwd()
 {
     char dir[FILENAME_MAX];
     cwd(dir, FILENAME_MAX);
     return std::string(dir);
 }
 
-std::pair<std::string, size_t> xPattern(std::string path, std::string pattern)
+inline std::pair<std::string, size_t> xPattern(std::string path, std::string pattern)
 {
 
     size_t findex, lfound = 0, count = 0; // first index, last found and count
@@ -90,7 +92,7 @@ std::pair<std::string, size_t> xPattern(std::string path, std::string pattern)
     return {path.substr(lfound, path.length()), count};
 }
 
-std::string resolve(std::string parent, std::string dep)
+inline std::string resolve(std::string parent, std::string dep)
 {
     size_t i = 0, foundIndex, upArrCnt;
 
@@ -113,6 +115,5 @@ std::string resolve(std::string parent, std::string dep)
     return (parent + baseName.substr(1));
 
 } // resolve paths
-
 
 #endif

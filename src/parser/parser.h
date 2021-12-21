@@ -3,8 +3,9 @@
 
 #include "common.h"
 #include "scanner/scanner.h"
+#include "syntax/syn_analysis.h"
 
-namespace RTToken
+namespace RTree
 {
 
     class Token;
@@ -20,10 +21,11 @@ namespace RTToken
         Token next();
 
         std::vector<Token> peek(size_t n) const;
-        const std::set<std::string>& scanDependencies(std::unique_ptr<SynAnalysis>& sa);
+        std::set<std::string> scanDependencies(std::shared_ptr<SynAnalysis> sa);
 
     private:
         std::vector<Token> _tokens;
+        std::set<std::string> _deps;
     };
 
 }

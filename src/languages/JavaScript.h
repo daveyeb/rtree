@@ -4,7 +4,7 @@
 #include "common.h"
 #include "syntax/syn_analysis.h"
 
-namespace RTToken
+namespace RTree
 {
     class Parser;
 
@@ -14,8 +14,8 @@ namespace RTToken
         RTJavaScript();
         virtual ~RTJavaScript();
 
-        void parse(Parser *const p);
-        const std::set<std::string>& deps() const;
+        void parse(Parser *const p, std::set<std::string> &str);
+        std::set<std::string> deps() const;
         
     };
 }

@@ -3,13 +3,21 @@
 
 #include "common.h"
 
-namespace RTToken
+namespace RTree
 {
+
+    typedef void (*option)(void);
 
     class Exec
     {
     public:
         static int run(int argc, char *argv[]);
+
+        Exec() {}
+        ~Exec() {}
+
+    private:
+        static std::string _option(std::string op);
     };
 }
 

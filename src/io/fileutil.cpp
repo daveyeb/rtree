@@ -1,19 +1,20 @@
 #include "fileutil.h"
 
-namespace RTToken
+namespace RTree
 {
 
     FileUtil::FileUtil()
     {
+        _exts.push_back(".js");
+        _exts.push_back(".ts");
     }
 
     FileUtil::~FileUtil()
     {
         _files.clear();
-        _chunks.clear();
     }
 
-    void FileUtil::readCWD(const std::string dir = rt_cwd())
+    void FileUtil::readCWD(const std::string dir)
     {
         tinydir_dir td;
         tinydir_file tf;
@@ -47,43 +48,39 @@ namespace RTToken
                 continue;
             }
 
-            _files.push_back(tf);
+            rtFile some = {tf.path, tf.extension, chunks(tf.path)};
+            _files.push_back(some);
+
             tinydir_next(&td);
         }
         tinydir_close(&td);
     }
 
-    std::map<rtFile, std::unique_ptr<SynAnalysis>> &FileUtil::chunks()
+    std::string FileUtil::chunks(char *path)
     {
         char ch;
         std::string buffer;
         FILE *fptr = nullptr;
 
-        for (auto &file : _files)
+        fptr = fopen(path, "r");
+
+        if (fptr == nullptr)
+            return "";
+
+        while (1)
         {
-            fptr = fopen(file.path, "r");
+            ch = fgetc(fptr);
 
-            if (fptr == nullptr)
-                continue;
+            if (feof(fptr))
+                break;
 
-            while (1)
-            {
-                ch = fgetc(fptr);
-
-                if (feof(fptr))
-                    break;
-
-                buffer += ch;
-            }
-
-            fclose(fptr);
-            fptr = nullptr;
-
-            //populating _chunks
-            _chunks.insert({{file.path, buffer}, _langType(file.extension)});
+            buffer += ch;
         }
 
-        return _chunks;
+        fclose(fptr);
+        fptr = nullptr;
+
+        return buffer;
     }
 
 }

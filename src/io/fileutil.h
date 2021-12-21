@@ -4,36 +4,47 @@
 #include "common.h"
 #include "syntax/syn_analysis.h"
 
-namespace RTToken
+#include "languages/javascript.h"
+
+namespace RTree
 {
 
     struct rtFile
     {
         std::string name;
-        std::string content;
+        std::string ext;
+        std::string chunk;
+
+        bool operator<(const rtFile &ob) const
+        {
+            return name.compare(ob.name) < 0;
+        }
     };
 
     class FileUtil
     {
     private:
-        std::vector<tinydir_file> _files;
+        std::vector<rtFile> _files;
         std::vector<std::string> _exts;
-
-        std::map<rtFile, std::unique_ptr<SynAnalysis>> _chunks;
-
-        std::unique_ptr<SynAnalysis> _langType(std::string ext)
-        {
-
-            if (iseq(ext, "js") || iseq(ext, "ts"))
-                return std::unique_ptr<RTJavaScript>();
-        }
 
     public:
         FileUtil();
         virtual ~FileUtil();
 
         void readCWD(const std::string dir = rt_cwd());
-        std::map<rtFile, std::unique_ptr<SynAnalysis>> &chunks(); // chunks w syntax to analyze w
+        std::string chunks(char * path);
+        std::vector<rtFile> files() const {
+            return _files;
+        };
+
+        std::shared_ptr<SynAnalysis> synAnalysis(std::string ext)
+        {
+            std::shared_ptr<SynAnalysis> ptr = nullptr;
+            if (iseq(ext, "js") || iseq(ext, "ts"))
+                ptr = std::shared_ptr<RTJavaScript>( new RTJavaScript );
+
+            return ptr;
+        }
     };
 
 }

@@ -18,12 +18,10 @@ Ensure you have [https://brew.sh](Homebrew) installed or use the same process as
 ## Usage:
     rtree
     rtree [-f | --full]
-    rtree [-b | --base]
     rtree [-d | --dependants]
 ## Commands:
-    -f,--full           Prints the absolute paths of imports
-    -d,--dependants     List dependants only 
-    -b,--basename       List all files with basename
+    -f,--full           Prints the absolute paths of dependants
+    -d,--dependants     Lists dependants only 
     -h,--help           Prints usage 
 ## Options:
     -v,--version        Shows version 

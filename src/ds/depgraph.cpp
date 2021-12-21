@@ -1,17 +1,28 @@
 #include "depgraph.h"
 
-namespace RTToken
+namespace RTree
 {
     DepGraph::DepGraph(size_t size)
     {
         _files = size;
         _dependants = 0;
         _filesPrinted = 0;
+        _isFull = false;
     }
 
     DepGraph::~DepGraph()
     {
         l.clear();
+    }
+
+    void DepGraph::setFull()
+    {
+        _isFull = true;
+    }
+
+    void DepGraph::setDeps()
+    {
+        _isDeps = true;
     }
 
     void DepGraph::addDep(std::string parent, std::set<std::string> deps)
@@ -23,10 +34,12 @@ namespace RTToken
             l[parent].push_back(dep);
         }
 
+        if(_isDeps && deps.empty()) return;
+
         _print(parent, deps);
     }
 
-    void DepGraph::_print(std::string parent, std::set<std::string> deps, bool isFullOrBase = false) 
+    void DepGraph::_print(std::string parent, std::set<std::string> deps)
     {
         std::vector<std::string> innerPointers = {"├───", "│   "};
         std::vector<std::string> outerPointers = {"└───", "    "};
@@ -38,7 +51,7 @@ namespace RTToken
 
         std::string baseName = xPattern(parent, "/").first;
         pointers[0] = _filesPrinted == _files - 1 ? outerPointers : innerPointers;
-
+        _filesPrinted++;
         // printing source file name
 
 #if (defined _MSC_VER || defined __MINGW32__)
@@ -46,7 +59,7 @@ namespace RTToken
         std::cout << pointers[0][0];
         _setmode(_fileno(stdout), _O_TEXT);
 #else
-        std::cout << pointers[0][0] << baseName << std::endl;
+        std::cout << pointers[0][0] << " " << baseName << std::endl;
 #endif
 
         // printing deps
@@ -60,25 +73,26 @@ namespace RTToken
             std::cout << pointers[0][1] << pointers[1][0];
             _setmode(_fileno(stdout), _O_TEXT);
 #else
-            std::cout << pointers[0][1] << pointers[1][0];
+            std::cout << pointers[0][1]  << " " << pointers[1][0] ;
 #endif
 
-            if (isFullOrBase)
+            if (_isFull)
             {
                 if (strcon(*it, "./"))
-                    std::cout << resolve(parent, *it) << "\n";
+                    std::cout << " " << resolve(parent, *it) << "\n";
                 else
-                    std::cout << *it << std::endl;
+                    std::cout << " " << *it << std::endl;
             }
             else
             {
-                std::cout << xPattern(*it, "/").first << "\n";
+                std::cout << " " << *it << std::endl;
             }
         }
     }
 
     void DepGraph::summary() const
     {
+
         std::cout << "\n"
                   << _dependants << " dependants, " << _files << " files" << std::endl;
     }

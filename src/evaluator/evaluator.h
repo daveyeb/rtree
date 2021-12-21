@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-namespace RTToken
+namespace RTree
 {
 
     class Token;

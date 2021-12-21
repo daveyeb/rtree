@@ -1,7 +1,7 @@
 #ifndef __RT__SCANNER_H__
 #define __RT__SCANNER_H__
 
-namespace RTToken
+namespace RTree
 {
 
     template <typename T>

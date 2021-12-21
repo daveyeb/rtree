@@ -4,7 +4,7 @@
 #include "common.h"
 #include "scanner/scanner.h"
 
-namespace RTToken
+namespace RTree
 {
 
     class Token;
@@ -23,8 +23,10 @@ namespace RTToken
 
     private:
         std::string _buffer;
+        std::vector<Token> tokens;
+
     };
 
-} // namespace RTToken
+} // namespace RTree
 
 #endif
