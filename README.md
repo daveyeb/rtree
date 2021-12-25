@@ -18,7 +18,7 @@ Ensure you have [https://brew.sh](Homebrew) installed or use the same process as
 ## Usage:
     rtree
     rtree [-f | --full]
-    rtree [-d | --dependants]
+    rtree [-d | --dependents]
 ## Commands:
     -f,--full           Prints the absolute paths of dependants
     -d,--dependants     Lists dependants only 
