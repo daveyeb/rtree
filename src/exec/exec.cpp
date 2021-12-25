@@ -11,7 +11,7 @@ namespace RTree
 
     std::string Exec::_option(std::string op)
     {
-        if (iseq(op, "-d") || iseq(op, "--dependents")) --dependants
+        if (iseq(op, "-d") || iseq(op, "--dependents"))
             return "dependents";
         else if (iseq(op, "-f") || iseq(op, "--full"))
             return "full";
