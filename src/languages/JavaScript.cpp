@@ -1,4 +1,4 @@
-#include "languages/Javascript.h"
+#include "languages/JavaScript.h"
 #include "parser/parser.h"
 #include "token/token.h"
 
