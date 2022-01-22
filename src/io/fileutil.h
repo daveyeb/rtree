@@ -4,7 +4,7 @@
 #include "common.h"
 #include "syntax/syn_analysis.h"
 
-#include "languages/javascript.h"
+#include "languages/JavaScript.h"
 
 namespace RTree
 {
