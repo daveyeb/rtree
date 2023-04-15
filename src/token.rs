@@ -1,12 +1,18 @@
+use crate::tokenkind::TokenKind;
 
+#[derive(Clone)]
 pub struct Token {
-    // pub kind: BufferType,
+    pub kind: TokenKind,
     pub lexeme: String,
     pub raw: String,
 }
 
-// impl Buffer for Token {
-//     fn btype(&self) -> &BufferType {
-//         &self.kind
-//     }
-// }
+impl Token {
+    pub fn new() -> Self {
+        Token {
+            kind: TokenKind::Unknown,
+            lexeme: "".to_string(),
+            raw: "".to_string(),
+        }
+    }
+}

@@ -1,0 +1,7 @@
+{
+  "id": "main",
+  "children": [
+    { "id": "fs", "children": [{ "id": "food" }, { "id": "threads" }] },
+    { "id": "food" }
+  ]
+}

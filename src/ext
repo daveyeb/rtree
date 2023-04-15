@@ -1,0 +1,50 @@
+Ada
+Assembly
+ASP, ASP.NET Bash
+C Shell Script
+C#
+C/C++
+COBOL ColdFusion ColdFusion Script CSS
+Data
+DOS Batch Fortran
+HTML
+IDL
+Java
+JavaScript
+JSP
+Makefiles MATLAB NeXtMidas
+Pascal
+Perl
+PhP
+File Extensions
+.ada, .a, .adb, .ads .asm, .s, .asm.ppc .asp, .aspx
+.sh, .ksh
+.csh, .tcsh
+.cs
+.cpp, .c, .cc, .cxx, .inl, .h, .hh, .hpp, .hxx, .inc .cbl, .cob, .cpy
+.cfm, .cfml, .cfc
+.cfs
+.css
+Use file mapping with Datafile=<ext>
+.bat
+.f, .for, .f77, .f90, .f95, .f03, .hpf
+.htm, .html, .shtml, .stm, .sht, .oth, .xhtml .pro, .sav
+.java
+.js
+.jsp
+.make, .makefile, (files named Makefile)
+.m
+.mm
+.pas, .p, .pp, .pa3, .pa4, .pa5
+.pl, .pm
+.php
+                                                  18
+UCC User Manual v.2018.07  ̈ Center for Systems and Software Engineering  ̈ University of Southern California
+   Python .py
+Ruby .rb
+Scala .scala
+SQL .sql
+VB .vb, .frm, .mod, .cls, .bas VBScript .vbs
+Verilog .v
+VHDL .vhd, .vhdl X-Midas .txt
+XML .xml

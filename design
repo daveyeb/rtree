@@ -1,0 +1,62 @@
+use cases 
+    user will be able to upload source codes
+    user will be able to submit a repo link to a source code 
+    user will be able to view a tree of file dependencies 
+    user will be able to download an image of result
+
+data entities 
+        userManagement 
+            usersByEmail 
+            user 
+                email 
+                pass
+                links 
+
+        tokenData
+            type 
+            raw 
+            lexeme 
+
+        TreeData 
+            <parent, childrens>
+            noFiles 
+            noDependents 
+            noDependables 
+            noIndependents 
+
+             
+
+code entities 
+    Lexer : Scanner
+        loadChunks 
+        scanTokens 
+
+        Rules 
+            identifier 
+            comment 
+            literal 
+            puntuation 
+    
+    Parser : Scanner
+        loadTokens 
+        parse
+
+        Rules 
+            importStmts
+
+
+    Scanner intefaces 
+    Rule interfaces 
+    
+
+configuration files 
+    allowed lang formats 
+
+
+design Rules 
+
+
+Need to reverse engineer
+
+Obsidian data viz links 
+https://publish.obsidian.md/app.js?94e981929648632db95b
