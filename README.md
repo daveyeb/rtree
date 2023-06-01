@@ -1,4 +1,4 @@
-# r🌲 CLI 
+# rtree
 A command line tool almost like the `tree` command but spits out a file dependency tree from repositories. This tool has only support for JavaScript projects at the moment.
 
 
