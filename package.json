@@ -1,0 +1,16 @@
+{
+  "name": "rtree",
+  "version": "1.0.0",
+  "description": "helper to build wasm binaries",
+  "main": "index.js",
+  "author": "david yeboah",
+  "license": "ISC",
+  "scripts": {
+    "build:wasm": "wasm-pack build --target web --out-name rtree",
+    "build": "npm run build:wasm -- -- --features wasm-bindgen-rayon/no-bundler",
+    "copy": "trash /Users/themoon/dev/rtree.rs/public/pkg/* && cp -r ./pkg/* /Users/themoon/dev/rtree.rs/public/pkg/"
+  },
+  "dependencies": {
+    "wasm-pack": "^0.12.1"
+  }
+}
