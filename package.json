@@ -8,7 +8,8 @@
   "scripts": {
     "build:wasm": "wasm-pack build --target web --out-name rtree",
     "build": "npm run build:wasm -- -- --features wasm-bindgen-rayon/no-bundler",
-    "copy": "trash /Users/themoon/dev/rtree.rs/public/pkg/* && cp -r ./pkg/* /Users/themoon/dev/rtree.rs/public/pkg/"
+    "copy": "trash /home/thetitan/personal/rtree.rs/public/pkg/* && cp -r ./pkg/* /home/thetitan/personal/rtree.rs/public/pkg/",
+    "copy:only": "cp -r ./pkg/* /home/thetitan/personal/rtree.rs/public/pkg/"
   },
   "dependencies": {
     "wasm-pack": "^0.12.1"

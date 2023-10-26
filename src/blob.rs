@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::ffi::OsStr;
 use std::path::Path;
 use std::str::FromStr;
+use std::fmt;
 use strum_macros::EnumString;
 
 
@@ -77,24 +78,11 @@ impl Blob {
         }
     }
 
-    // fn ext(&self) -> Option<String> {
-    //     match self {
-    //         Blob::Java(x, _) => Some(x.rsplit_once(".").unwrap().1.to_string()),
-    //         Blob::JavaScript(x, _) => Some(x.rsplit_once(".").unwrap().1.to_string()),
-    //         Blob::Python(x, _) => Some(x.rsplit_once(".").unwrap().1.to_string()),
-    //         Blob::Rust(x, _) => Some(x.rsplit_once(".").unwrap().1.to_string()),
-    //         Blob::CPlusPlus(x, _) => Some(x.rsplit_once(".").unwrap().1.to_string()),
-    //         Blob::C(x, _) => Some(x.rsplit_once(".").unwrap().1.to_string()),
-    //         Blob::GoLang(x, _) => Some(x.rsplit_once(".").unwrap().1.to_string()),
-    //         _ => None,
-    //     }
-    // }
-
     fn ext(path: &str) -> Option<&str> {
         Path::new(path).extension().and_then(OsStr::to_str)
     }
 
-    fn url(&self) -> Option<String> {
+    pub fn url(&self) -> Option<String> {
         match self {
             Blob::Java(_, x) => Some(x.to_string()),
             Blob::JavaScript(_, x) => Some(x.to_string()),
@@ -107,16 +95,45 @@ impl Blob {
         }
     }
 
-    // async fn content(&self, url: &str) -> Option<String> {
-    //     match self {
-    //         Blob::Java(_, _) => Some(self.get_content(url).await),
-    //         Blob::JavaScript(_, _) => Some(self.get_content(url).await),
-    //         Blob::Python(_, _) => Some(self.get_content(url).await),
-    //         Blob::Rust(_, _) => Some(self.get_content(url).await),
-    //         Blob::CPlusPlus(_, _) => Some(self.get_content(url).await),
-    //         Blob::C(_, _) => Some(self.get_content(url).await),
-    //         Blob::GoLang(_, _) => Some(self.get_content(url).await),
-    //         _ => None,
-    //     }
-    // }
+    pub fn file_path(&self) -> Option<String> {
+        match self {
+            Blob::Java(x, _) => Some(x.to_string()),
+            Blob::JavaScript(x, _) => Some(x.to_string()),
+            Blob::Python(x, _) => Some(x.to_string()),
+            Blob::Rust(x, _) => Some(x.to_string()),
+            Blob::CPlusPlus(x, _) => Some(x.to_string()),
+            Blob::C(x, _) => Some(x.to_string()),
+            Blob::GoLang(x, _) => Some(x.to_string()),
+            _ => None,
+        }
+    }
+
+    pub fn r#type(&self) -> Option<String> {
+        match self {
+            // Blob::Java(_, x) => Some(x.to_string()),
+            // Blob::JavaScript(_, x) => Some(x.to_string()),
+            // Blob::Python(_, x) => Some(x.to_string()),
+            // Blob::Rust(_, x) => Some(x.to_string()),
+            // Blob::CPlusPlus(_, x) => Some(x.to_string()),
+            // Blob::C(_, x) => Some(x.to_string()),
+            // Blob::GoLang(_, x) => Some(x.to_string()),
+            _ => Some(self.to_string()),
+        }
+    }
+
+}
+
+impl fmt::Display for Blob {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Blob::Java(_, _) => write!(f, "Java"),
+            Blob::JavaScript(_, _) => write!(f, "JavaScript"),
+            Blob::Python(_, _) => write!(f, "Python"),
+            Blob::Rust(_, _) => write!(f, "Rust"),
+            Blob::CPlusPlus(_, _) => write!(f, "C++"),
+            Blob::C(_, _) => write!(f, "C"),
+            Blob::GoLang(_, _) => write!(f, "Go"),
+            Blob::Unknown => write!(f, "NA"),
+        }
+    }
 }

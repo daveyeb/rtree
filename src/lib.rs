@@ -29,7 +29,7 @@ pub struct Tree {
 }
 
 #[wasm_bindgen]
-pub async fn get_map(tree: JsValue) -> JsValue {
+pub async fn get_map2(tree: JsValue) -> Result<JsValue, JsValue> {
     let host_url = "http://localhost:9000";
     let deser_tree: Tree = serde_wasm_bindgen::from_value(tree.clone()).unwrap();
     let mut blob_contents = Vec::new();
@@ -62,7 +62,8 @@ pub async fn get_map(tree: JsValue) -> JsValue {
         }).filter(|v| !v.is_empty())
         .collect::<Vec<_>>();
 
+    log(&format!("Done parsing golds"));
 
-    JsValue::from_str(&format!("Done parsing {:?}", blob_stmts))
+    Ok(serde_wasm_bindgen::to_value(&blob_stmts)?)
 }
 

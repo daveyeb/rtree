@@ -1,4 +1,13 @@
 use crate::{blob::Blob, token::Token};
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Link {
+    source: String,
+    target: String,
+    r#type: String,
+    value: usize,
+}
 
 #[derive(Debug)]
 pub struct Parse {
@@ -14,7 +23,7 @@ impl Parse {
         }
     }
 
-    pub fn parse(&mut self, blob: &Blob) -> Vec<(String, Blob)> {
+    pub fn parse(&mut self, blob: &Blob) -> Vec<Link> {
         let mut stmts = Vec::new();
 
         loop {
@@ -22,7 +31,12 @@ impl Parse {
             match js(self) {
                 Some(x) => {
                     // log(&format!("{} -> {:?}", x, blob));
-                    stmts.push((x, blob.clone()));
+                    stmts.push(Link {
+                        source: x,
+                        target: blob.file_path().unwrap(),
+                        r#type: blob.r#type().unwrap(),
+                        value: 100,
+                    });
                 }
                 _ => (),
             }

@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 strum = "0.25"
 strum_macros = "0.25"
 serde = { version = "1.0.183", features = ["derive"] }
-serde-wasm-bindgen = "0.4.3"
+serde-wasm-bindgen = "0.6.1"
 reqwest-wasm = "0.11.16"
 base64 = "0.21.2"
 wasm-bindgen = "0.2.87"
