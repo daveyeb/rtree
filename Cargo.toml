@@ -1,0 +1,43 @@
+[package]
+name = "fly-rtree"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+console_error_panic_hook = "0.1"
+js-sys = "0.3.64"
+rayon = "1.1.0"
+rayon-core = "1.5.0"
+serde-wasm-bindgen = "0.4.3"
+futures-channel-preview = "0.3.0-alpha.18"
+wasm-bindgen = "0.2.87"
+wasm-bindgen-futures = "0.4.37"
+strum = "0.24"
+strum_macros = "0.24"
+serde = { version = "1.0.183", features = ["derive"] }
+base64 = "0.21.2"
+
+
+[dependencies.web-sys]
+version = "0.3.23"
+features = [
+  'ErrorEvent',
+  'Event',
+  'Navigator',
+  'Window',
+  'Worker',
+  'DedicatedWorkerGlobalScope',
+  'MessageEvent',
+  'Headers',
+  'Request',
+  'RequestInit',
+  'RequestMode',
+  'Response',
+  'console'
+]
